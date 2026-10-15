@@ -1,0 +1,3651 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EVCSE 3.0 — Mobile App Experience | Tiempo de Valor™</title>
+
+    <!-- Google Fonts: Sora (Display) & Inter (UI/Body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/png" href="assets/logo-evcse-nuevo.png">
+
+    <style>
+        /* ==========================================================================
+           EVCSE DIGITAL BRAND SYSTEM 2.5 / 3.0
+           "Transformamos el tiempo de carga en tiempo de valor"
+           ========================================================================== */
+        :root {
+            /* Core Brand Colors */
+            --evcse-deep: #07110D;
+            /* Base canvas / Dark luxury */
+            --evcse-forest: #063D2E;
+            /* Brand container / depth surface */
+            --evcse-energy-green: #00FF4C;
+            /* Strictly functional: action, progress, positive status */
+            --evcse-cloud: #F5F7F5;
+            /* Primary typography & contrast */
+            --evcse-graphite: #242A27;
+            /* Technical surfaces & chips */
+            --evcse-silver: #B9C2BD;
+            /* Secondary captions & labels */
+
+            /* Translucent Surfaces & Elevation */
+            --surface-forest-glass: rgba(6, 61, 46, 0.55);
+            --surface-forest-deep: rgba(6, 61, 46, 0.28);
+            --surface-graphite-card: rgba(36, 42, 39, 0.75);
+            --surface-deep-card: rgba(7, 17, 13, 0.88);
+            --border-subtle: rgba(185, 194, 189, 0.14);
+            --border-forest: rgba(6, 61, 46, 0.8);
+            --border-green-active: rgba(0, 255, 76, 0.4);
+
+            /* Functional States */
+            --status-available: #00FF4C;
+            --status-charging: #00FF4C;
+            --status-waiting: #F6B93B;
+            --status-error: #FF5252;
+            --status-offline: #747D8C;
+
+            /* Typography */
+            --font-display: 'Sora', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+            /* Radii */
+            --radius-xl: 28px;
+            --radius-lg: 20px;
+            --radius-md: 14px;
+            --radius-sm: 10px;
+            --radius-pill: 9999px;
+
+            /* Motion */
+            --ease-calm: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-energy: cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-fast: 0.18s var(--ease-energy);
+            --transition-smooth: 0.32s var(--ease-calm);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--evcse-deep);
+            background-image: radial-gradient(circle at 50% 12%, rgba(6, 61, 46, 0.35) 0%, #07110D 85%);
+            color: var(--evcse-cloud);
+            font-family: var(--font-ui);
+            min-height: 100vh;
+            min-height: 100dvh;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+            overflow-x: hidden;
+        }
+
+        /* ==========================================================================
+           RESPONSIVE APPLICATION SHELL
+           ========================================================================== */
+        .device-container {
+            width: 100%;
+            max-width: 440px;
+            min-height: 100vh;
+            min-height: 100dvh;
+            height: 100dvh;
+            background-color: var(--evcse-deep);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            margin: 0 auto;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.75);
+        }
+
+        @media (min-width: 480px) {
+            body {
+                padding: 16px 0;
+                align-items: center;
+            }
+
+            .device-container {
+                height: 94vh;
+                max-height: 920px;
+                border-radius: 32px;
+                border: 1px solid var(--border-subtle);
+                box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 35px rgba(0, 255, 76, 0.05);
+            }
+        }
+
+        @media (max-width: 479px) {
+            body {
+                padding: 0;
+            }
+
+            .device-container {
+                width: 100vw;
+                height: 100dvh;
+                border-radius: 0;
+                border: none;
+                box-shadow: none;
+            }
+        }
+
+        /* Responsive In-App Header */
+        .app-top-header {
+            height: 52px;
+            padding: 12px 18px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: var(--font-display);
+            color: var(--evcse-cloud);
+            z-index: 900;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(180deg, rgba(7, 17, 13, 0.98) 0%, rgba(7, 17, 13, 0.75) 70%, transparent 100%);
+        }
+
+        .app-brand-pill {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+            color: var(--evcse-cloud);
+            cursor: pointer;
+        }
+
+        .app-brand-pill .brand-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--evcse-energy-green);
+            box-shadow: 0 0 8px rgba(0, 255, 76, 0.7);
+        }
+
+        .app-network-chip {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 11px;
+            border-radius: var(--radius-pill);
+            background: rgba(6, 61, 46, 0.6);
+            border: 1px solid var(--border-green-active);
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--evcse-energy-green);
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .app-network-chip:hover {
+            background: rgba(6, 61, 46, 0.9);
+        }
+
+        .app-top-right-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--evcse-silver);
+            font-size: 11px;
+        }
+
+        /* Auth Tabs & Form Styles */
+        .auth-tab-segment {
+            display: flex;
+            background: rgba(36, 42, 39, 0.6);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-pill);
+            padding: 4px;
+            margin: 16px 0 20px;
+        }
+
+        .auth-tab-btn {
+            flex: 1;
+            padding: 10px 0;
+            text-align: center;
+            border: none;
+            background: transparent;
+            color: var(--evcse-silver);
+            font-family: var(--font-display);
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: var(--radius-pill);
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .auth-tab-btn.active {
+            background: var(--evcse-forest);
+            color: var(--evcse-energy-green);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .auth-form-panel {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .auth-form-panel.active {
+            display: block;
+        }
+
+        .password-input-wrapper {
+            position: relative;
+        }
+
+        .password-toggle-btn {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--evcse-silver);
+            cursor: pointer;
+            font-size: 14px;
+            padding: 4px;
+        }
+
+        .auth-helper-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            margin: 12px 0 20px;
+            color: var(--evcse-silver);
+        }
+
+        .auth-helper-row a {
+            color: var(--evcse-energy-green);
+            text-decoration: none;
+        }
+
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 20px 0;
+            color: var(--evcse-silver);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .auth-divider::before,
+        .auth-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .auth-divider span {
+            padding: 0 10px;
+        }
+
+        .auth-sso-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .auth-sso-btn {
+            height: 46px;
+            background: rgba(36, 42, 39, 0.5);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            color: var(--evcse-cloud);
+            font-family: var(--font-ui);
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .auth-sso-btn:hover {
+            border-color: var(--evcse-silver);
+            background: rgba(36, 42, 39, 0.85);
+        }
+
+        .auth-select {
+            width: 100%;
+            height: 50px;
+            background: var(--surface-graphite-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 0 16px;
+            color: var(--evcse-cloud);
+            font-family: var(--font-ui);
+            font-size: 13px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .auth-select option {
+            background: #0B1611;
+            color: var(--evcse-cloud);
+        }
+
+        .terms-checkbox-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 12px;
+            color: var(--evcse-silver);
+            line-height: 1.4;
+            margin: 14px 0 20px;
+        }
+
+        .terms-checkbox-row input[type="checkbox"] {
+            margin-top: 2px;
+            accent-color: var(--evcse-energy-green);
+        }
+
+        color: var(--evcse-energy-green);
+        }
+
+        /* Screen Wrapper */
+        .screens-viewport {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .screen {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 58px 20px 100px;
+            display: none;
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity var(--transition-smooth), transform var(--transition-smooth);
+            scrollbar-width: none;
+        }
+
+        .screen::-webkit-scrollbar {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Global Header in Screens */
+        .screen-top-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .header-btn-back {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-pill);
+            background: var(--surface-graphite-card);
+            border: 1px solid var(--border-subtle);
+            color: var(--evcse-cloud);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .header-btn-back:hover {
+            border-color: var(--evcse-silver);
+        }
+
+        .screen-header-title {
+            font-family: var(--font-display);
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--evcse-cloud);
+            text-align: center;
+        }
+
+        .header-badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: var(--radius-pill);
+            background: rgba(6, 61, 46, 0.6);
+            color: var(--evcse-energy-green);
+            border: 1px solid var(--border-green-active);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* ==========================================================================
+           ENERGY LINE (MOTION SIGNATURE)
+           ========================================================================== */
+        .energy-line-track {
+            width: 100%;
+            height: 3px;
+            background: rgba(36, 42, 39, 0.4);
+            position: relative;
+            overflow: hidden;
+            border-radius: 2px;
+            margin: 14px 0;
+        }
+
+        .energy-line-pulse {
+            position: absolute;
+            top: 0;
+            left: -35%;
+            width: 35%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent 0%, rgba(0, 255, 76, 0.4) 50%, var(--evcse-energy-green) 100%);
+            animation: energyFlow 2.4s infinite cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes energyFlow {
+            0% {
+                left: -35%;
+            }
+
+            100% {
+                left: 100%;
+            }
+        }
+
+        /* ==========================================================================
+           BOTTOM NAVIGATION DOCK (5 HUBS)
+           ========================================================================== */
+        .bottom-nav-dock {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 84px;
+            background: rgba(7, 17, 13, 0.94);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 0 12px 18px;
+            z-index: 850;
+            transition: transform var(--transition-smooth);
+        }
+
+        .bottom-nav-dock.hidden {
+            transform: translateY(100%);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--evcse-silver);
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            flex: 1;
+            padding: 6px 0;
+        }
+
+        .nav-item svg {
+            width: 22px;
+            height: 22px;
+            stroke-width: 2;
+            transition: var(--transition-fast);
+        }
+
+        .nav-item span {
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+        }
+
+        .nav-item:hover {
+            color: var(--evcse-cloud);
+        }
+
+        .nav-item.active {
+            color: var(--evcse-energy-green);
+        }
+
+        .nav-item.active svg {
+            stroke: var(--evcse-energy-green);
+            transform: translateY(-2px);
+        }
+
+        /* Hero Central Charge Button */
+        .nav-item-hero {
+            position: relative;
+            top: -16px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .hero-charge-disc {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #0A4E3B 0%, #063D2E 100%);
+            border: 2px solid var(--evcse-energy-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.6), 0 0 16px rgba(0, 255, 76, 0.25);
+            transition: transform var(--transition-fast);
+        }
+
+        .hero-charge-disc svg {
+            width: 26px;
+            height: 26px;
+            stroke: var(--evcse-energy-green);
+            fill: none;
+        }
+
+        .nav-item-hero:hover .hero-charge-disc {
+            transform: scale(1.06);
+        }
+
+        .nav-item-hero span {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--evcse-energy-green);
+            margin-top: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Active Dwell Floating Mini-Bar */
+        .active-dwell-mini-bar {
+            position: absolute;
+            bottom: 88px;
+            left: 16px;
+            right: 16px;
+            background: rgba(6, 61, 46, 0.9);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-green-active);
+            border-radius: var(--radius-pill);
+            padding: 8px 14px;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 840;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .active-dwell-mini-bar.visible {
+            display: flex;
+        }
+
+        .dwell-mini-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dwell-mini-bolt {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(0, 255, 76, 0.15);
+            color: var(--evcse-energy-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .dwell-mini-text h5 {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--evcse-cloud);
+        }
+
+        .dwell-mini-text p {
+            font-size: 10px;
+            color: var(--evcse-silver);
+        }
+
+        .dwell-mini-tag {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--evcse-energy-green);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* ==========================================================================
+           REUSABLE CARD & BUTTON PATTERNS (PREMIUM UTILITY)
+           ========================================================================== */
+        .ev-card {
+            background: var(--surface-graphite-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            margin-bottom: 16px;
+            position: relative;
+            overflow: hidden;
+            transition: border-color var(--transition-fast);
+        }
+
+        .ev-card:hover {
+            border-color: rgba(185, 194, 189, 0.28);
+        }
+
+        .ev-card-forest {
+            background: linear-gradient(160deg, rgba(6, 61, 46, 0.75) 0%, rgba(7, 17, 13, 0.95) 100%);
+            border: 1px solid var(--border-forest);
+        }
+
+        .btn-primary {
+            width: 100%;
+            min-height: 52px;
+            background: var(--evcse-energy-green);
+            color: var(--evcse-deep);
+            border: none;
+            border-radius: var(--radius-pill);
+            font-family: var(--font-display);
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            text-decoration: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 24px rgba(0, 255, 76, 0.3);
+        }
+
+        .btn-secondary {
+            width: 100%;
+            min-height: 48px;
+            background: rgba(36, 42, 39, 0.6);
+            color: var(--evcse-cloud);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-pill);
+            font-family: var(--font-ui);
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--evcse-silver);
+            background: rgba(36, 42, 39, 0.9);
+        }
+
+        /* Chips & Tags */
+        .tag-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: var(--radius-pill);
+            font-size: 11px;
+            font-weight: 500;
+            background: rgba(36, 42, 39, 0.8);
+            color: var(--evcse-silver);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .tag-pill.active,
+        .tag-pill.tag-green {
+            background: rgba(6, 61, 46, 0.8);
+            color: var(--evcse-energy-green);
+            border-color: var(--border-green-active);
+        }
+
+        /* ==========================================================================
+           VALUE CLOCK™ COMPONENT (PROPRIETARY DUAL-RING ARCHITECTURE)
+           ========================================================================== */
+        .value-clock-wrapper {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            margin: 10px auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .value-clock-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .clock-outer-track {
+            fill: none;
+            stroke: var(--evcse-graphite);
+            stroke-width: 9;
+        }
+
+        .clock-outer-fill {
+            fill: none;
+            stroke: var(--evcse-energy-green);
+            stroke-width: 9;
+            stroke-linecap: round;
+            stroke-dasharray: 691;
+            /* 2 * PI * 110 */
+            stroke-dashoffset: 330;
+            transition: stroke-dashoffset 0.8s var(--ease-calm);
+        }
+
+        .clock-inner-track {
+            fill: none;
+            stroke: rgba(6, 61, 46, 0.7);
+            stroke-width: 6;
+        }
+
+        .clock-inner-fill {
+            fill: none;
+            stroke: var(--evcse-cloud);
+            stroke-width: 6;
+            stroke-linecap: round;
+            stroke-dasharray: 565;
+            /* 2 * PI * 90 */
+            stroke-dashoffset: 240;
+            transition: stroke-dashoffset 0.8s var(--ease-calm);
+        }
+
+        .value-clock-center {
+            text-align: center;
+            z-index: 10;
+        }
+
+        .value-clock-center .clock-val-num {
+            font-family: var(--font-display);
+            font-size: 34px;
+            font-weight: 800;
+            color: var(--evcse-cloud);
+            line-height: 1.1;
+        }
+
+        .value-clock-center .clock-val-sub {
+            font-family: var(--font-ui);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: var(--evcse-energy-green);
+            margin-top: 2px;
+            text-transform: uppercase;
+        }
+
+        .value-clock-center .clock-experience-tag {
+            font-size: 11px;
+            color: var(--evcse-silver);
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        /* ==========================================================================
+           SCREEN 01: SPLASH SCREEN
+           ========================================================================== */
+        #screen-1 {
+            background: radial-gradient(circle at 50% 40%, #0B2A20 0%, #07110D 70%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px 24px;
+        }
+
+        .splash-logo-box {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .splash-logo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .splash-brand-title {
+            font-family: var(--font-display);
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            color: var(--evcse-cloud);
+            margin-bottom: 8px;
+        }
+
+        .splash-brand-subtitle {
+            font-family: var(--font-ui);
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--evcse-silver);
+            max-width: 260px;
+            line-height: 1.5;
+            margin-bottom: 32px;
+        }
+
+        .splash-promise-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 18px;
+            border-radius: var(--radius-pill);
+            background: rgba(6, 61, 46, 0.6);
+            border: 1px solid var(--border-green-active);
+            font-family: var(--font-display);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--evcse-energy-green);
+            letter-spacing: 0.5px;
+        }
+
+        /* ==========================================================================
+           SCREEN 02: STRATEGIC ONBOARDING ("TIEMPO DE VALOR")
+           ========================================================================== */
+        #screen-2 {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 58px 24px 34px;
+        }
+
+        .onboarding-slide {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .onboarding-slide.active {
+            display: flex;
+        }
+
+        .onboarding-visual-box {
+            width: 100%;
+            height: 270px;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            margin-bottom: 28px;
+            border: 1px solid var(--border-forest);
+            position: relative;
+        }
+
+        .onboarding-visual-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .onboarding-visual-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 40%, rgba(7, 17, 13, 0.95) 100%);
+        }
+
+        .onboarding-tag {
+            font-family: var(--font-ui);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: var(--evcse-energy-green);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .onboarding-title {
+            font-family: var(--font-display);
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--evcse-cloud);
+            margin-bottom: 12px;
+            line-height: 1.25;
+        }
+
+        .onboarding-desc {
+            font-family: var(--font-ui);
+            font-size: 14px;
+            color: var(--evcse-silver);
+            line-height: 1.6;
+            max-width: 310px;
+        }
+
+        .onboarding-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 24px 0 20px;
+        }
+
+        .dot-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--evcse-graphite);
+            transition: all var(--transition-fast);
+        }
+
+        .dot-indicator.active {
+            width: 24px;
+            border-radius: var(--radius-pill);
+            background: var(--evcse-energy-green);
+        }
+
+        /* ==========================================================================
+           SCREEN 03: AUTH & PASSKEY PAIRING
+           ========================================================================== */
+        .auth-hero-box {
+            text-align: center;
+            margin: 18px 0 24px;
+        }
+
+        .auth-hero-box h2 {
+            font-family: var(--font-display);
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--evcse-cloud);
+        }
+
+        .auth-hero-box p {
+            font-size: 13px;
+            color: var(--evcse-silver);
+            margin-top: 6px;
+        }
+
+        .auth-input-group {
+            margin-bottom: 16px;
+        }
+
+        .auth-input-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--evcse-silver);
+            margin-bottom: 6px;
+        }
+
+        .auth-input {
+            width: 100%;
+            height: 50px;
+            background: var(--surface-graphite-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 0 16px;
+            color: var(--evcse-cloud);
+            font-family: var(--font-ui);
+            font-size: 14px;
+            outline: none;
+            transition: border-color var(--transition-fast);
+        }
+
+        .auth-input:focus {
+            border-color: var(--evcse-energy-green);
+        }
+
+        .vehicle-quick-chip {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            background: rgba(6, 61, 46, 0.4);
+            border: 1px solid var(--border-forest);
+            border-radius: var(--radius-md);
+            margin-bottom: 20px;
+        }
+
+        .vehicle-quick-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(0, 255, 76, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--evcse-energy-green);
+            font-size: 16px;
+        }
+
+        /* ==========================================================================
+           SCREEN 04: HOME ("YOUR MOBILITY TODAY")
+           ========================================================================== */
+        .home-greeting-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .home-greeting-text h4 {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--evcse-silver);
+        }
+
+        .home-greeting-text h2 {
+            font-family: var(--font-display);
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--evcse-cloud);
+            margin-top: 2px;
+        }
+
+        .home-status-pill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: var(--radius-pill);
+            background: rgba(6, 61, 46, 0.5);
+            border: 1px solid var(--border-green-active);
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--evcse-energy-green);
+        }
+
+        /* Vehicle Status Card */
+        .vehicle-status-card {
+            background: linear-gradient(145deg, rgba(6, 61, 46, 0.6) 0%, rgba(7, 17, 13, 0.95) 100%);
+            border: 1px solid var(--border-forest);
+            border-radius: var(--radius-xl);
+            padding: 18px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .vehicle-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .vehicle-model-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .vehicle-model-badge h3 {
+            font-family: var(--font-display);
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--evcse-cloud);
+        }
+
+        .vehicle-plate-pill {
+            font-size: 10px;
+            font-weight: 600;
+            background: rgba(36, 42, 39, 0.8);
+            padding: 2px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border-subtle);
+            color: var(--evcse-silver);
+        }
+
+        .vehicle-metrics-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .battery-soc-visual {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+
+        .battery-soc-num {
+            font-family: var(--font-display);
+            font-size: 44px;
+            font-weight: 800;
+            color: var(--evcse-cloud);
+            line-height: 1;
+        }
+
+        .battery-soc-percent {
+            font-family: var(--font-display);
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--evcse-energy-green);
+        }
+
+        .battery-autonomy-box h5 {
+            font-size: 11px;
+            color: var(--evcse-silver);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .battery-autonomy-box h4 {
+            font-family: var(--font-display);
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--evcse-cloud);
+            margin-top: 2px;
+        }
+
+        .mobility-condition-text {
+            font-size: 12px;
+            color: var(--evcse-silver);
+            margin-top: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(185, 194, 189, 0.1);
+        }
+
+        /* Recommended EVCSE Hub Card */
+        .section-label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .section-label-row h3 {
+            font-family: var(--font-display);
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--evcse-cloud);
+        }
+
+        .section-label-row a {
+            font-size: 12px;
+            color: var(--evcse-energy-green);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .hub-feature-card {
+            background: var(--surface-graphite-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            margin-bottom: 22px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .hub-feature-card:hover {
+            border-color: var(--border-green-active);
+            transform: translateY(-2px);
+        }
+
+        .hub-card-media {
+            height: 120px;
+            width: 100%;
+            position: relative;
+        }
+
+        .hub-card-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hub-card-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 20%, rgba(7, 17, 13, 0.95) 100%);
+        }
+
+        .hub-badge-float {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(7, 17, 13, 0.85);
+            backdrop-filter: blur(8px);
+            padding: 4px 10px;
+            border-radius: var(--radius-pill);
+            border: 1px solid var(--border-green-active);
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--evcse-energy-green);
+        }
+
+        .hub-card-content {
+            padding: 14px 16px;
+        }
+
+        .hub-card-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 8px;
+        }
+
+        .hub-card-title-row h4 {
+            font-family: var(--font-display);
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--evcse-cloud);
+        }
+
+        .hub-card-title-row span {
+            font-size: 12px;
+            color: var(--evcse-silver);
+        }
+
+        .hub-amenity-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .hub-metrics-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 10px;
+            border-top: 1px solid var(--border-subtle);
+            font-size: 12px;
+        }
+
+        .hub-metric-item strong {
+            color: var(--evcse-cloud);
+            font-weight: 600;
+        }
+
+        /* Value Intent Picker */
+        .intent-section-box {
+            margin-bottom: 24px;
+        }
+
+        .intent-section-box h3 {
+            font-family: var(--font-display);
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--evcse-cloud);
+            margin-bottom: 4px;
+        }
+
+        .intent-section-box p {
+            font-size: 12px;
+            color: var(--evcse-silver);
+            margin-bottom: 12px;
+        }
+
+        .intent-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        .intent-card {
+            background: rgba(36, 42, 39, 0.6);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 12px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .intent-card:hover {
+            border-color: var(--evcse-silver);
+        }
+
+        .intent-card.selected {
+            background: rgba(6, 61, 46, 0.7);
+            border-color: var(--evcse-energy-green);
+        }
+
+        .intent-card .intent-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .intent-card .intent-name {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--evcse-cloud);
+        }
+
+        /* ==========================================================================
+           SCREEN 05: SMART EVCSE PLANNER
+           ========================================================================== */
+        .planner-stepper-box {
+            background: var(--surface-graphite-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .planner-step-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--evcse-energy-green);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .planner-slider-row {
+            margin: 12px 0;
+        }
+
+        .planner-slider-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--evcse-silver);
+            margin-bottom: 8px;
+        }
+
+        .range-slider {
+            width: 100%;
+            -webkit-appearance: none;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--evcse-graphite);
+            outline: none;
+        }
+
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--evcse-energy-green);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 255, 76, 0.5);
+        }
+
+        .time-chips-group {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .time-chip {
+            flex: 1;
+            padding: 8px 4px;
+            background: rgba(36, 42, 39, 0.5);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--evcse-silver);
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .time-chip.selected {
+            background: var(--evcse-forest);
+            color: var(--evcse-energy-green);
+            border-color: var(--border-green-active);
+        }
+
+        /* Match Result Box */
+        .planner-match-result {
+            background: linear-gradient(150deg, rgba(6, 61, 46, 0.8) 0%, rgba(7, 17, 13, 0.95) 100%);
+            border: 1px solid var(--border-green-active);
+            border-radius: var(--radius-xl);
+            padding: 18px;
+            margin-top: 20px;
+            position: relative;
+        }
+
+        .match-header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--evcse-energy-green);
+            background: rgba(0, 255, 76, 0.12);
+            padding: 4px 10px;
+            border-radius: var(--radius-pill);
+            margin-bottom: 10px;
+        }
+
+        /* ==========================================================================
+           SCREEN 06: EXPLORE (INTERACTIVE MAP & STATIONS)
+           ========================================================================== */
+        .explore-search-bar {
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .explore-search-input {
+            width: 100%;
+            height: 46px;
+            background: var(--surface-graphite-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-pill);
+            padding: 0 16px 0 42px;
+            color: var(--evcse-cloud);
+            font-family: var(--font-ui);
+            font-size: 13px;
+            outline: none;
+        }
+
+        .explore-search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--evcse-silver);
+        }
+
+        .explore-filters-scroll {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            margin-bottom: 14px;
+            scrollbar-width: none;
+        }
+
+        .explore-filters-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .explore-map-container {
+            width: 100%;
+            height: 240px;
+            border-radius: var(--radius-lg);
+            background: #0B1611;
+            border: 1px solid var(--border-forest);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .map-svg-grid {
+            width: 100%;
+            height: 100%;
+            opacity: 0.6;
+        }
+
+        .map-pin {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            transition: transform var(--transition-fast);
+        }
+
+        .map-pin:hover {
+            transform: translate(-50%, -50%) scale(1.15);
+        }
+
+        .pin-pill {
+            background: rgba(7, 17, 13, 0.95);
+            border: 1px solid var(--border-green-active);
+            padding: 4px 8px;
+            border-radius: var(--radius-pill);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--evcse-cloud);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+        }
+
+        .pin-pill .pin-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--evcse-energy-green);
+        }
+
+        /* ==========================================================================
+           SCREEN 07: STATION DETAIL (OPERATIONAL + VALUE)
+           ========================================================================== */
+        .station-hero-media {
+            height: 190px;
+            width: 100%;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 16px;
+            border: 1px solid var(--border-forest);
+        }
+
+        .station-hero-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .station-bay-pills-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin: 14px 0 20px;
+        }
+
+        .bay-pill-box {
+            background: rgba(36, 42, 39, 0.6);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 8px 4px;
+            text-align: center;
+        }
+
+        .bay-pill-box.available {
+            border-color: var(--border-green-active);
+            background: rgba(6, 61, 46, 0.4);
+        }
+
+        .bay-pill-box .bay-num {
+            font-family: var(--font-display);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--evcse-cloud);
+        }
+
+        .bay-pill-box .bay-state {
+            font-size: 9px;
+            font-weight: 600;
+            color: var(--evcse-energy-green);
+            margin-top: 2px;
+        }
+
+        /* ==========================================================================
+           SCREEN 08: COMPATIBILITY (CERTAINTY FIRST)
+           ========================================================================== */
+        .compatibility-verdict-box {
+            text-align: center;
+            padding: 24px 16px;
+            background: rgba(6, 61, 46, 0.45);
+            border: 1px solid var(--border-green-active);
+            border-radius: var(--radius-xl);
+            margin-bottom: 20px;
+        }
+
+        .compat-icon-seal {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            background: rgba(0, 255, 76, 0.15);
+            border: 1px solid var(--evcse-energy-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            color: var(--evcse-energy-green);
+            font-size: 26px;
+        }
+
+        /* ==========================================================================
+           SCREEN 10: VIRTUAL QUEUE ("MIENTRAS ESPERAS")
+           ========================================================================== */
+        .queue-clock-highlight {
+            background: linear-gradient(160deg, rgba(6, 61, 46, 0.65) 0%, rgba(7, 17, 13, 0.95) 100%);
+            border: 1px solid var(--border-forest);
+            border-radius: var(--radius-xl);
+            padding: 24px 16px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .queue-clock-highlight h4 {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: var(--evcse-silver);
+            margin-bottom: 6px;
+        }
+
+        .queue-clock-highlight .queue-time-big {
+            font-family: var(--font-display);
+            font-size: 42px;
+            font-weight: 800;
+            color: var(--evcse-energy-green);
+            line-height: 1;
+        }
+
+        /* ==========================================================================
+           SCREEN 12: ACTIVE VALUE CHARGING (THE SIGNATURE SCREEN)
+           ========================================================================== */
+        .telemetry-split-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .telemetry-metric-tile {
+            background: rgba(36, 42, 39, 0.55);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 12px;
+        }
+
+        .telemetry-metric-tile h6 {
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--evcse-silver);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .telemetry-metric-tile .tile-val {
+            font-family: var(--font-display);
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--evcse-cloud);
+            margin-top: 4px;
+        }
+
+        .tile-val span {
+            font-size: 11px;
+            color: var(--evcse-silver);
+            font-weight: 400;
+        }
+
+        .t-minus-five-alert {
+            background: rgba(246, 185, 59, 0.12);
+            border: 1px solid rgba(246, 185, 59, 0.4);
+            border-radius: var(--radius-md);
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            font-size: 12px;
+            color: #F6B93B;
+        }
+
+        /* ==========================================================================
+           SCREEN 14: EVCSE PASS (DIGITAL WALLET & MEMBERSHIP)
+           ========================================================================== */
+        .evcse-pass-card {
+            background: linear-gradient(135deg, #094232 0%, #06281E 60%, #041711 100%);
+            border: 1px solid var(--border-green-active);
+            border-radius: var(--radius-xl);
+            padding: 22px;
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pass-watermark {
+            position: absolute;
+            right: -15px;
+            bottom: -20px;
+            opacity: 0.08;
+            width: 160px;
+            pointer-events: none;
+        }
+
+        .pass-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .pass-top-row h3 {
+            font-family: var(--font-display);
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: var(--evcse-cloud);
+        }
+
+        .pass-tier-badge {
+            font-size: 10px;
+            font-weight: 700;
+            background: rgba(0, 255, 76, 0.15);
+            color: var(--evcse-energy-green);
+            padding: 3px 8px;
+            border-radius: var(--radius-pill);
+            letter-spacing: 0.5px;
+        }
+
+        .pass-holder-name {
+            font-family: var(--font-display);
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--evcse-cloud);
+            margin-bottom: 4px;
+        }
+
+        .pass-vehicle-label {
+            font-size: 12px;
+            color: var(--evcse-silver);
+            margin-bottom: 20px;
+        }
+
+        .pass-metrics-row {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* ==========================================================================
+           SCREEN 16: EVCSE ASSIST (CONTEXT-AWARE PROBLEM RESOLUTION)
+           ========================================================================== */
+        .assist-session-attached-card {
+            background: rgba(6, 61, 46, 0.45);
+            border: 1px solid var(--border-forest);
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            margin-bottom: 16px;
+        }
+
+        .assist-session-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--evcse-silver);
+            margin-bottom: 6px;
+        }
+
+        .assist-issue-btn {
+            width: 100%;
+            background: var(--surface-graphite-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            text-align: left;
+            color: var(--evcse-cloud);
+            font-size: 13px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .assist-issue-btn:hover {
+            border-color: var(--border-green-active);
+            background: rgba(6, 61, 46, 0.4);
+        }
+
+        /* ==========================================================================
+           ERROR STATE DIALOG / CONTINGENCY MODAL
+           ========================================================================== */
+        .error-modal-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(3, 8, 5, 0.88);
+            backdrop-filter: blur(14px);
+            z-index: 990;
+            display: none;
+            align-items: flex-end;
+            padding: 20px;
+        }
+
+        .error-modal-overlay.active {
+            display: flex;
+        }
+
+        .error-modal-card {
+            width: 100%;
+            background: var(--evcse-deep);
+            border: 1px solid var(--status-error);
+            border-radius: var(--radius-xl);
+            padding: 20px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85);
+            animation: slideUp 0.3s ease;
+        }
+
+        .error-card-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--status-error);
+            background: rgba(255, 82, 82, 0.12);
+            padding: 4px 10px;
+            border-radius: var(--radius-pill);
+            margin-bottom: 12px;
+        }
+
+        .error-field-block {
+            margin-bottom: 12px;
+        }
+
+        .error-field-block h6 {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--evcse-silver);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+
+        .error-field-block p {
+            font-size: 13px;
+            color: var(--evcse-cloud);
+            line-height: 1.4;
+        }
+
+        /* Toast Container */
+        .app-toast-box {
+            position: absolute;
+            top: 56px;
+            left: 20px;
+            right: 20px;
+            background: rgba(7, 17, 13, 0.95);
+            border: 1px solid var(--border-green-active);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            z-index: 950;
+            transform: translateY(-80px);
+            opacity: 0;
+            transition: all 0.35s var(--ease-calm);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .app-toast-box.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ==========================================================================
+         RESPONSIVE APPLICATION CONTAINER
+         ========================================================================== -->
+    <main class="device-container" id="device-frame" role="application">
+
+        <!-- Responsive In-App Header -->
+        <div class="app-top-header">
+            <div class="app-brand-pill" onclick="navigateToScreen(4)">
+                <img src="assets/logo-evcse-nuevo.png" alt="EVCSE Logo"
+                    style="width: 24px; height: 24px; object-fit: contain; border-radius: 50%;">
+                <span>EVCSE</span>
+            </div>
+
+            <div class="app-network-chip" id="dynamic-status-chip" onclick="onStatusChipTap()">
+                <span class="chip-bolt">⚡</span>
+                <span id="chip-status-text">Hub 93 • 240 kW</span>
+            </div>
+
+            <div class="app-top-right-meta">
+                <span>4G</span>
+                <svg width="15" height="10" viewBox="0 0 24 14" fill="currentColor">
+                    <rect x="1" y="1" width="19" height="12" rx="3" fill="none" stroke="currentColor"
+                        stroke-width="2" />
+                    <rect x="3" y="3" width="12" height="8" rx="1.5" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- Global Toast Notification -->
+        <div class="app-toast-box" id="app-toast" role="alert">
+            <div style="color: var(--evcse-energy-green); font-size: 20px;">⚡</div>
+            <div>
+                <h5 id="toast-title" style="font-size: 12px; font-weight: 700; color: var(--evcse-cloud);">Notificación
+                    EVCSE</h5>
+                <p id="toast-body" style="font-size: 11px; color: var(--evcse-silver); margin-top: 2px;">Mensaje de
+                    sistema</p>
+            </div>
+        </div>
+
+        <!-- Active Dwell Mini-Bar (Persistent companion when charging) -->
+        <div class="active-dwell-mini-bar" id="dwell-mini-bar" onclick="navigateToScreen(12)">
+            <div class="dwell-mini-left">
+                <div class="dwell-mini-bolt">⚡</div>
+                <div class="dwell-mini-text">
+                    <h5 id="dwell-mini-soc">Carga en curso: 68%</h5>
+                    <p id="dwell-mini-sub">14 min para ti • The Work Lounge</p>
+                </div>
+            </div>
+            <div class="dwell-mini-tag">
+                Ver Value Clock™ →
+            </div>
+        </div>
+
+        <!-- Screens Viewport -->
+        <div class="screens-viewport">
+
+            <!-- ------------------------------------------------------------------
+                 SCREEN 01: SPLASH SCREEN
+                 ------------------------------------------------------------------ -->
+            <div class="screen active" id="screen-1">
+                <div class="splash-logo-box">
+                    <img src="assets/logo-evcse-nuevo.png" alt="EVCSE Logo"
+                        style="filter: drop-shadow(0 12px 30px rgba(0, 255, 76, 0.3));">
+                </div>
+                <h1 class="splash-brand-title">EVCSE</h1>
+                <p class="splash-brand-subtitle">
+                    Transformamos el tiempo de carga en tiempo de valor.
+                </p>
+                <div class="splash-promise-badge">
+                    <span>⚡</span> Tu vehículo carga. Tú avanzas.
+                </div>
+                <div class="energy-line-track" style="width: 140px; margin-top: 36px;">
+                    <div class="energy-line-pulse"></div>
+                </div>
+            </div>
+
+            <!-- ------------------------------------------------------------------
+                 SCREEN 02: ONBOARDING CAROUSEL
+                 ------------------------------------------------------------------ -->
+            <div class="screen" id="screen-2">
+                <div class="screen-top-header">
+                    <span class="header-badge">EVCSE 3.0</span>
+                    <button class="tag-pill" onclick="navigateToScreen(3)">Omitir</button>
+                </div>
+
+                <div class="onboarding-slide active" id="slide-1">
+                    <div class="onboarding-visual-box">
+                        <img src="assets/Designer (21).png" alt="EVCSE Work Lounge">
+                        <div class="onboarding-visual-overlay"></div>
+                    </div>
+                    <span class="onboarding-tag">TIEMPO DE VALOR™</span>
+                    <h2 class="onboarding-title">Tu tiempo no se detiene mientras cargas</h2>
+                    <p class="onboarding-desc">
+                        Recupera autonomía a 240 kW DC mientras trabajas, disfrutas café de especialidad o descansas en
+                        espacios VIP exclusivos.
+                    </p>
+                </div>
+
+                <div class="onboarding-slide" id="slide-2">
+                    <div class="onboarding-visual-box">
+                        <img src="assets/Designer (23).png" alt="EVCSE Hub Architecture">
+                        <div class="onboarding-visual-overlay"></div>
+                    </div>
+                    <span class="onboarding-tag">SMART PLANNER</span>
+                    <h2 class="onboarding-title">Planifica con certeza absoluta</h2>
+                    <p class="onboarding-desc">
+                        Selecciona tu tiempo disponible y tu intención: trabajar, relajarte o un café. El sistema
+                        armoniza tu ruta y asegura tu bahía.
+                    </p>
+                </div>
+
+                <div class="onboarding-slide" id="slide-3">
+                    <div class="onboarding-visual-box">
+                        <img src="assets/Designer (22).png" alt="EVCSE Value Clock Experience">
+                        <div class="onboarding-visual-overlay"></div>
+                    </div>
+                    <span class="onboarding-tag">VALUE CLOCK™</span>
+                    <h2 class="onboarding-title">Tu vehículo carga. Tú avanzas.</h2>
+                    <p class="onboarding-desc">
+                        Monitorea en un solo componente el progreso energético de tu auto y los minutos recuperados para
+                        tus proyectos y descanso.
+                    </p>
+                </div>
+
+                <div>
+                    <div class="onboarding-dots">
+                        <span class="dot-indicator active" id="dot-1"></span>
+                        <span class="dot-indicator" id="dot-2"></span>
+                        <span class="dot-indicator" id="dot-3"></span>
+                    </div>
+
+                    <button class="btn-primary" id="btn-onboarding-next" onclick="nextOnboardingSlide()">
+                        Continuar
+                    </button>
+                </div>
+            </div>
+
+            <!-- ------------------------------------------------------------------
+                 SCREEN 03: LOGIN & REGISTRO (AUTENTICACIÓN COMPLETA)
+                 ------------------------------------------------------------------ -->
+            <div class="screen" id="screen-3">
+                <div class="screen-top-header">
+                    <button class="header-btn-back" onclick="navigateToScreen(2)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                    </button>
+                    <span class="screen-header-title">Acceso EVCSE</span>
+                    <span class="header-badge">3.0 PASS</span>
+                </div>
+
+                <div class="auth-hero-box"
+                    style="margin: 8px 0 16px; display: flex; flex-direction: column; align-items: center;">
+                    <img src="assets/logo-evcse-nuevo.png" alt="EVCSE Logo"
+                        style="width: 58px; height: 58px; object-fit: contain; margin-bottom: 10px; filter: drop-shadow(0 6px 18px rgba(0, 255, 76, 0.25));">
+                    <h2 style="font-size: 22px;">Tu portal de movilidad</h2>
+                    <p style="font-size: 13px;">Inicia sesión o crea tu cuenta para disfrutar de Tiempo de Valor™</p>
+                </div>
+
+                <!-- Tabs: Iniciar Sesión / Registro -->
+                <div class="auth-tab-segment" role="tablist">
+                    <button class="auth-tab-btn active" id="tab-btn-login" onclick="switchAuthTab('login')">
+                        Iniciar Sesión
+                    </button>
+                    <button class="auth-tab-btn" id="tab-btn-register" onclick="switchAuthTab('register')">
+                        Crear Cuenta
+                    </button>
+                </div>
+
+                <!-- TAB 1: INICIAR SESIÓN -->
+                <div class="auth-form-panel active" id="panel-login">
+                    <div class="vehicle-quick-chip">
+                        <div class="vehicle-quick-icon">🚗</div>
+                        <div>
+                            <h4 style="font-size: 13px; font-weight: 600; color: var(--evcse-cloud);">Tesla Model E •
+                                TSL-882</h4>
+                            <p style="font-size: 11px; color: var(--evcse-silver);">Vehículo verificado por Plug &amp;
+                                Charge</p>
+                        </div>
+                    </div>
+
+                    <div class="auth-input-group">
+                        <label class="auth-input-label">Correo electrónico o Teléfono móvil</label>
+                        <input type="email" id="login-email" class="auth-input" value="juan.mercado@empresa.com"
+                            placeholder="correo@ejemplo.com">
+                    </div>
+
+                    <div class="auth-input-group">
+                        <label class="auth-input-label">Contraseña</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="login-password" class="auth-input" value="••••••••••••"
+                                placeholder="Tu contraseña">
+                            <button type="button" class="password-toggle-btn"
+                                onclick="togglePasswordVisibility('login-password')">👁️</button>
+                        </div>
+                    </div>
+
+                    <div class="auth-helper-row">
+                        <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                            <input type="checkbox" checked style="accent-color: var(--evcse-energy-green);">
+                            <span>Recordarme</span>
+                        </label>
+                        <a href="javascript:void(0)"
+                            onclick="triggerToast('Recuperación', 'Enlace de restablecimiento enviado a tu correo')">
+                            ¿Olvidaste tu contraseña?
+                        </a>
+                    </div>
+
+                    <button class="btn-primary" onclick="handleLoginSubmit()">
+                        INICIAR SESIÓN
+                    </button>
+
+                    <div class="auth-divider">
+                        <span>O accede directamente</span>
+                    </div>
+
+                    <div class="auth-sso-grid">
+                        <button class="auth-sso-btn" onclick="handleLoginSubmit()">
+                            <span>🍏</span> Apple ID
+                        </button>
+                        <button class="auth-sso-btn" onclick="handleLoginSubmit()">
+                            <span>🌐</span> Google ID
+                        </button>
+                    </div>
+
+                    <button class="btn-secondary" style="font-size: 12px;" onclick="handlePasskeyLogin()">
+                        <span>⚡</span> Acceder con EVCSE Passkey Biométrico
+                    </button>
+                </div>
+
+                <!-- TAB 2: CREAR CUENTA / REGISTRO -->
+                <div class="auth-form-panel" id="panel-register">
+                    <div class="auth-input-group">
+                        <label class="auth-input-label">Nombre y Apellidos</label>
+                        <input type="text" id="reg-name" class="auth-input" value="Juan Camilo Mercado"
+                            placeholder="Tu nombre completo">
+                    </div>
+
+                    <div class="auth-input-group">
+                        <label class="auth-input-label">Correo Electrónico</label>
+                        <input type="email" id="reg-email" class="auth-input" value="juan.mercado@empresa.com"
+                            placeholder="correo@ejemplo.com">
+                    </div>
+
+                    <div class="auth-input-group">
+                        <label class="auth-input-label">Teléfono Móvil (+57 Colombia)</label>
+                        <input type="tel" id="reg-phone" class="auth-input" value="+57 300 482 9182"
+                            placeholder="+57 300...">
+                    </div>
+
+                    <div class="auth-input-group">
+                        <label class="auth-input-label">Contraseña de Seguridad</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="reg-password" class="auth-input" value="Segura2026*"
+                                placeholder="Mínimo 8 caracteres">
+                            <button type="button" class="password-toggle-btn"
+                                onclick="togglePasswordVisibility('reg-password')">👁️</button>
+                        </div>
+                    </div>
+
+                    <div class="auth-input-group">
+                        <label class="auth-input-label">Vehículo Eléctrico Principal</label>
+                        <select class="auth-select" id="reg-vehicle">
+                            <option value="Tesla Model E" selected>Tesla Model E (75.0 kWh • 240 kW DC)</option>
+                            <option value="Tesla Model 3">Tesla Model 3 (Long Range)</option>
+                            <option value="Tesla Model Y">Tesla Model Y (Dual Motor)</option>
+                            <option value="Porsche Taycan">Porsche Taycan Turbo</option>
+                            <option value="BMW i4">BMW i4 M50</option>
+                            <option value="Otro">Otro vehículo eléctrico</option>
+                        </select>
+                    </div>
+
+                    <div class="auth-input-group">
+                        <label class="auth-input-label">Placa del Vehículo</label>
+                        <input type="text" id="reg-plate" class="auth-input" value="TSL-882" placeholder="Ej: TSL-882">
+                    </div>
+
+                    <div class="auth-input-group">
+                        <label class="auth-input-label">Facturación Electrónica DIAN (Opcional)</label>
+                        <input type="text" id="reg-tax" class="auth-input" value="NIT: 901.442.880-1 (Factura Directa)"
+                            placeholder="NIT o Cédula">
+                    </div>
+
+                    <div class="terms-checkbox-row">
+                        <input type="checkbox" id="reg-terms" checked>
+                        <label for="reg-terms">
+                            Acepto los <a href="javascript:void(0)" style="color: var(--evcse-energy-green);">Términos
+                                de Servicio</a> y la <a href="javascript:void(0)"
+                                style="color: var(--evcse-energy-green);">Política de Tratamiento de Datos</a> de EVCSE.
+                        </label>
+                    </div>
+
+                    <button class="btn-primary" onclick="handleRegisterSubmit()">
+                        CREAR CUENTA Y ACTIVAR PASS
+                    </button>
+                </div>
+            </div>
+
+            <!-- ------------------------------------------------------------------
+                 SCREEN 04: HOME ("YOUR MOBILITY TODAY")
+                 ------------------------------------------------------------------ -->
+            <div class="screen" id="screen-4">
+                <div class="home-greeting-bar">
+                    <div class="home-greeting-text">
+                        <h4>Buenos días</h4>
+                        <h2>Juan Camilo</h2>
+                    </div>
+                    <div class="home-status-pill" id="home-connectivity-badge">
+                        <span class="status-dot"></span>
+                        Hub 93 Conectado
+                    </div>
+                </div>
+
+                <!-- Vehicle Status Card -->
+                <div class="vehicle-status-card">
+                    <div class="vehicle-card-header">
+                        <div class="vehicle-model-badge">
+                            <h3>Tesla Model E</h3>
+                            <span class="vehicle-plate-pill">TSL-882</span>
+                        </div>
+                        <span class="tag-pill tag-green">En Reposo</span>
+                    </div>
+
+                    <div class="vehicle-metrics-grid">
+                        <div class="battery-soc-visual">
+                            <span class="battery-soc-num" id="home-battery-num">52</span>
+                            <span class="battery-soc-percent">%</span>
+                        </div>
+                        <div class="battery-autonomy-box">
+                            <h5>Autonomía Actual</h5>
+                            <h4>294 km</h4>
+                        </div>
+                    </div>
+
+                    <div class="energy-line-track" style="margin: 12px 0 6px;">
+                        <div class="energy-line-pulse"></div>
+                    </div>
+
+                    <div class="mobility-condition-text">
+                        <span>⚡</span> Sugerido: Carga óptima de 18 min para viaje de fin de semana.
+                    </div>
+                </div>
+
+                <!-- Intent Selector: "¿Cómo quieres aprovechar tu Tiempo de Valor?" -->
+                <div class="intent-section-box">
+                    <h3>¿Cómo quieres aprovechar tu tiempo hoy?</h3>
+                    <p>Personalizamos tu centro de experiencia EVCSE</p>
+
+                    <div class="intent-grid">
+                        <div class="intent-card selected" onclick="selectIntent(this, 'Work')">
+                            <span class="intent-icon">💼</span>
+                            <span class="intent-name">Work Lounge</span>
+                        </div>
+                        <div class="intent-card" onclick="selectIntent(this, 'Coffee')">
+                            <span class="intent-icon">☕</span>
+                            <span class="intent-name">Café de Origen</span>
+                        </div>
+                        <div class="intent-card" onclick="selectIntent(this, 'Relax')">
+                            <span class="intent-icon">🌿</span>
+                            <span class="intent-name">Zona Relax</span>
+                        </div>
+                        <div class="intent-card" onclick="selectIntent(this, 'Meeting')">
+                            <span class="intent-icon">🤝</span>
+                            <span class="intent-name">Salas Privadas</span>
+                        </div>
+                        <div class="intent-card" onclick="selectIntent(this, 'Pet')">
+                            <span class="intent-icon">🐾</span>
+                            <span class="intent-name">Pet Friendly</span>
+                        </div>
+                        <div class="intent-card" onclick="selectIntent(this, 'Food')">
+                            <span class="intent-icon">🍽️</span>
+                            <span class="intent-name">Gourmet</span>
+                        </div>
+                    </div>
+
+                    <button class="btn-primary" onclick="navigateToScreen(5)">
+                        <span>⚡</span> PLANIFICAR MI CARGA
+                    </button>
+                </div>
+
+                <!-- Recommended Hub Card -->
+                <div class="section-label-row">
+                    <h3>Experiencia Recomendada</h3>
+                    <a href="javascript:void(0)" onclick="navigateToScreen(6)">Ver Mapa</a>
+                </div>
+
+                <div class="hub-feature-card" onclick="navigateToScreen(7)">
+                    <div class="hub-card-media">
+                        <img src="assets/Designer (22).png" alt="EVCSE Hub Calle 93">
+                        <div class="hub-card-overlay"></div>
+                        <span class="hub-badge-float">240 kW DC • 3 Bahías Libres</span>
+                    </div>
+                    <div class="hub-card-content">
+                        <div class="hub-card-title-row">
+                            <h4>Hub Calle 93 Bogotá</h4>
+                            <span>1.8 km (6 min)</span>
+                        </div>
+                        <div class="hub-amenity-tags">
+                            <span class="tag-pill">Work Lounge VIP</span>
+                            <span class="tag-pill">Café Origen Huila</span>
+                            <span class="tag-pill">Wi-Fi 6</span>
+                        </div>
+                        <div class="hub-metrics-row">
+                            <div class="hub-metric-item">Carga est.: <strong>18 min (80%)</strong></div>
+                            <div class="hub-metric-item">Tarifa: <strong>$1.850 / kWh</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ------------------------------------------------------------------
+                 SCREEN 05: SMART EVCSE PLANNER
+                 ------------------------------------------------------------------ -->
+            <div class="screen" id="screen-5">
+                <div class="screen-top-header">
+                    <button class="header-btn-back" onclick="navigateToScreen(4)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                    </button>
+                    <span class="screen-header-title">Smart Planner</span>
+                    <span class="header-badge">EVCSE AI</span>
+                </div>
+
+                <div class="planner-stepper-box">
+                    <div class="planner-step-title">1. Destino y Vehículo</div>
+                    <div style="font-size: 13px; font-weight: 600; color: var(--evcse-cloud); margin-bottom: 2px;">
+                        Calle 93 #14-20, Bogotá (Chicó)
+                    </div>
+                    <div style="font-size: 11px; color: var(--evcse-silver);">
+                        Vehículo: Tesla Model E (Batería 75.0 kWh • SoC actual: 52%)
+                    </div>
+                </div>
+
+                <div class="planner-stepper-box">
+                    <div class="planner-step-title">2. Objetivo de Carga &amp; Tiempo Libre</div>
+
+                    <div class="planner-slider-row">
+                        <div class="planner-slider-labels">
+                            <span>Objetivo de Batería:</span>
+                            <strong style="color: var(--evcse-energy-green);" id="planner-target-label">80%
+                                (Recomendado)</strong>
+                        </div>
+                        <input type="range" class="range-slider" min="60" max="100" step="5" value="80"
+                            oninput="updatePlannerTarget(this.value)">
+                    </div>
+
+                    <div style="margin-top: 14px;">
+                        <span style="font-size: 12px; color: var(--evcse-silver);">¿Cuánto tiempo tienes disponible para
+                            ti?</span>
+                        <div class="time-chips-group">
+                            <div class="time-chip" onclick="selectTimeChip(this, 20)">20 min</div>
+                            <div class="time-chip selected" onclick="selectTimeChip(this, 30)">30 min</div>
+                            <div class="time-chip" onclick="selectTimeChip(this, 45)">45 min</div>
+                            <div class="time-chip" onclick="selectTimeChip(this, 60)">60+ min</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Match Calculation Output -->
+                <div class="planner-match-result">
+                    <div class="match-header-badge">
+                        <span>★</span> EXPERIENCIA PERFECTAMENTE SINCRONIZADA
+                    </div>
+                    <h3
+                        style="font-family: var(--font-display); font-size: 17px; font-weight: 700; color: var(--evcse-cloud); margin-bottom: 4px;">
+                        Hub Calle 93 + The Work Lounge
+                    </h3>
+                    <p style="font-size: 12px; color: var(--evcse-silver); line-height: 1.5; margin-bottom: 12px;">
+                        Tu auto cargará del 52% al 80% en <strong>18 minutos</strong> (240 kW DC). Tendrás <strong>12
+                            minutos adicionales</strong> para terminar tu café y llamadas en el Work Lounge.
+                    </p>
+
+                    <div class="hub-metrics-row" style="border-top-color: rgba(0, 255, 76, 0.2); margin-bottom: 16px;">
+                        <div>Costo proyectado: <strong>$48.200 COP</strong></div>
+                        <div>Espacio reservado: <strong>Mesa 04 (Silenciosa)</strong></div>
+                    </div>
+
+                    <button class="btn-primary" onclick="navigateToScreen(9)">
+                        RESERVAR EXPERIENCIA COMPLETA
+                    </button>
+                </div>
+            </div>
+
+            <!-- ------------------------------------------------------------------
+                 SCREEN 06: EXPLORE (MAP & STATIONS)
+                 ------------------------------------------------------------------ -->
+            <div class="screen" id="screen-6">
+                <div class="explore-search-bar">
+                    <svg class="explore-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                    <input type="text" class="explore-search-input"
+                        placeholder="Buscar por estación, zona o amenidad...">
+                </div>
+
+                <div class="explore-filters-scroll">
+                    <span class="tag-pill active">Todos los Hubs</span>
+                    <span class="tag-pill">240 kW DC</span>
+                    <span class="tag-pill">Work Lounge</span>
+                    <span class="tag-pill">Café Bar</span>
+                    <span class="tag-pill">Disponibles Ahora</span>
+                </div>
+
+                <!-- Interactive SVG Map -->
+                <div class="explore-map-container">
+                    <svg class="map-svg-grid" viewBox="0 0 400 240">
+                        <path d="M 20 60 Q 180 80 380 40" stroke="#0E361A" stroke-width="3" fill="none" />
+                        <path d="M 40 180 Q 200 120 360 200" stroke="#0E361A" stroke-width="4" fill="none" />
+                        <path d="M 120 10 L 160 230" stroke="#173F28" stroke-width="2" fill="none" />
+                        <path d="M 280 20 L 260 220" stroke="#173F28" stroke-width="2" fill="none" />
+                    </svg>
+
+                    <!-- Pin 1: Calle 93 -->
+                    <div class="map-pin" style="top: 35%; left: 35%;" onclick="navigateToScreen(7)">
+                        <div class="pin-pill">
+                            <span class="pin-dot"></span>
+                            Calle 93 • 240kW
+                        </div>
+                    </div>
+
+                    <!-- Pin 2: Usaquén -->
+                    <div class="map-pin" style="top: 65%; left: 70%;" onclick="navigateToScreen(7)">
+                        <div class="pin-pill">
+                            <span class="pin-dot"></span>
+                            Usaquén • 180kW
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Station Cards List -->
+                <div class="ev-card" onclick="navigateToScreen(7)" style="cursor: pointer;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                        <div>
+                            <h4
+                                style="font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--evcse-cloud);">
+                                EVCSE Hub Calle 93
+                            </h4>
+                            <p style="font-size: 12px; color: var(--evcse-silver);">Chicó Norte • 1.8 km</p>
+                        </div>
+                        <span class="tag-pill tag-green">3 Libres</span>
+                    </div>
+                    <div class="hub-amenity-tags" style="margin-bottom: 8px;">
+                        <span class="tag-pill">The Work Lounge</span>
+                        <span class="tag-pill">Barista Café</span>
+                    </div>
+                    <div class="hub-metrics-row">
+                        <span>Potencia: <strong>240 kW DC</strong></span>
+                        <span>Tarifa: <strong>$1.850 / kWh</strong></span>
+                    </div>
+                </div>
+
+                <div class="ev-card" onclick="navigateToScreen(7)" style="cursor: pointer;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                        <div>
+                            <h4
+                                style="font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--evcse-cloud);">
+                                EVCSE Hub Plaza Campestre
+                            </h4>
+                            <p style="font-size: 12px; color: var(--evcse-silver);">Corredor Universitario • 4.2 km</p>
+                        </div>
+                        <span class="tag-pill tag-green">2 Libres</span>
+                    </div>
+                    <div class="hub-amenity-tags" style="margin-bottom: 8px;">
+                        <span class="tag-pill">Zona Relax</span>
+                        <span class="tag-pill">Pet Friendly</span>
+                    </div>
+                    <div class="hub-metrics-row">
+                        <span>Potencia: <strong>240 kW DC</strong></span>
+                        <span>Tarifa: <strong>$1.850 / kWh</strong></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ------------------------------------------------------------------
+                 SCREEN 07: STATION DETAIL (OPERATIONAL + VALUE)
+                 ------------------------------------------------------------------ -->
+            <div class="screen" id="screen-7">
+                <div class="screen-top-header">
+                    <button class="header-btn-back" onclick="navigateToScreen(6)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                    </button>
+                    <span class="screen-header-title">Detalle de Estación</span>
+                    <button class="header-btn-back"
+                        onclick="triggerToast('Guardado', 'Estación agregada a tus favoritas')">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="station-hero-media">
+                    <img src="assets/Designer (23).png" alt="Hub Exterior EVCSE">
+                </div>
+
+                <div style="margin-bottom: 14px;">
+                    <h2
+                        style="font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--evcse-cloud);">
+                        EVCSE Hub Calle 93 Bogotá
+                    </h2>
+                    <p style="font-size: 12px; color: var(--evcse-silver); margin-top: 4px;">
+                        Carrera 14 #93-40 • 99.8% Confiabilidad de red
+                    </p>
+                </div>
+
+                <!-- Bays Operational State -->
+                <div class="station-bay-pills-row">
+                    <div class="bay-pill-box available">
+                        <div class="bay-num">B-01</div>
+                        <div class="bay-state">Libre (240k)</div>
+                    </div>
+                    <div class="bay-pill-box available">
+                        <div class="bay-num">B-02</div>
+                        <div class="bay-state">Libre (240k)</div>
+                    </div>
+                    <div class="bay-pill-box available">
+                        <div class="bay-num">B-03</div>
+                        <div class="bay-state">Libre (240k)</div>
+                    </div>
+                    <div class="bay-pill-box" style="border-color: rgba(255, 82, 82, 0.4);">
+                        <div class="bay-num" style="color: var(--evcse-silver);">B-04</div>
+                        <div class="bay-state" style="color: var(--status-error);">Ocupada</div>
+                    </div>
+                </div>
+
+                <!-- Experiential Zone -->
+                <div class="ev-card ev-card-forest">
+                    <h4
+                        style="font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--evcse-energy-green); margin-bottom: 6px;">
+                        TU TIEMPO DE VALOR™
+                    </h4>
+                    <p style="font-size: 12px; color: var(--evcse-cloud); line-height: 1.5; margin-bottom: 12px;">
+                        Espacios de acceso exclusivo para miembros mientras el vehículo carga:
+                    </p>
+                    <ul
+                        style="font-size: 12px; color: var(--evcse-silver); list-style: none; display: flex; flex-direction: column; gap: 6px;">
+                        <li>✔ <strong>The Work Lounge:</strong> Puestos ergonómicos y Wi-Fi 6 gigabit</li>
+                        <li>✔ <strong>Specialty Coffee:</strong> Barista en vivo de 7am a 9pm</li>
+                        <li>✔ <strong>Silent Pod:</strong> Cabina privada para llamadas confidenciales</li>
+                    </ul>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button class="btn-secondary" onclick="navigateToScreen(8)">
+                        Ver Compatibilidad
+                    </button>
+                    <button class="btn-primary" onclick="navigateToScreen(9)">
+                        Preparar Experiencia
+                    </button>
+                </div>
+            </div>
+
+            <!-- ------------------------------------------------------------------
+                 SCREEN 08: COMPATIBILITY ENGINE
+                 ------------------------------------------------------------------ -->
+            <div class="screen" id="screen-8">
+                <div class="screen-top-header">
+                    <button class="header-btn-back" onclick="navigateToScreen(7)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                    </button>
+                    <span class="screen-header-title">Compatibilidad</span>
+                    <div style="width: 40px;"></div>
+                </div>
+
+                <div class="compatibility-verdict-box">
+                    <div class="compat-icon-seal">✓</div>
+                    <h2
+                        style="font-family: var(--font-display); font-size: 20px; font-weight: 800; color: var(--evcse-cloud); margin-bottom: 6px;">
+                        100% Compatible y Certificado
+                    </h2>
+                    <p
+                        style="font-size: 13px; color: var(--evcse-silver); max-width: 280px; margin: 0 auto; line-height: 1.5;">
+                        Tu <strong>Tesla Model E</strong> cargará a la máxima velocidad admitida por su arquitectura
+                        (hasta 240 kW DC pico en EVCSE Hubs).
+                    </p>
+                </div>
+
+                <div class="ev-card">
+                    <h4 style="font-size: 13px; font-weight: 600; color: var(--evcse-cloud); margin-bottom: 12px;">
+                        Curva de Carga Estimada
+                    </h4>
+                    <div class="hub-metrics-row" style="margin-bottom: 8px;">
+                        <span>Conector necesario:</span>
+                        <strong style="color: var(--evcse-energy-green);">CCS2 Combo (Disponible)</strong>
+                    </div>
+                    <div class="hub-metrics-row" style="margin-bottom: 8px;">
+                        <span>Rango de Carga:</span>
+                        <strong>52% → 80% (Óptimo)</strong>
+                    </div>
+                    <div class="hub-metrics-row">
+                        <span>Tiempo de Carga Estimado:</span>
+                        <strong>18 Minutos</strong>
+                    </div>
+                </div>
+
+                <button class="btn-primary" onclick="navigateToScreen(9)">
+                    Avanzar con esta Estación
+                </button>
+            </div>
+
+            <!-- ------------------------------------------------------------------
+                 SCREEN 09: BOOKING ("PREPARAR MI EXPERIENCIA")
+                 ------------------------------------------------------------------ -->
+            <div class="screen" id="screen-9">
+                <div class="screen-top-header">
+                    <button class="header-btn-back" onclick="navigateToScreen(7)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                    </button>
+                    <span class="screen-header-title">Preparar Experiencia</span>
+                    <div style="width: 40px;"></div>
+                </div>
+
+                <div class="ev-card ev-card-forest">
+                    <h4
+                        style="font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--evcse-cloud); margin-bottom: 4px;">
+                        Resumen de Reserva Inteligente
+                    </h4>
+                    <p style="font-size: 12px; color: var(--evcse-silver); margin-bottom: 14px;">
+                        Bahía 03 reservada para tu llegada en EVCSE Hub Calle 93.
+                    </p>
+
+                    <div class="hub-metrics-row" style="margin-bottom: 8px;">
+                        <span>Llegada estimada:</span>
+                        <strong>En 10 minutos (10:15 AM)</strong>
+                    </div>
+                    <div class="hub-metrics-row" style="margin-bottom: 8px;">
+                        <span>Objetivo de carga:</span>
+                        <strong>80% (+160 km)</strong>
+                    </div>
+                    <div class="hub-metrics-row" style="margin-bottom: 8px;">
+                        <span>Experiencia reservada:</span>
+                        <strong>Work Lounge (Mesa con tomas USB-C)</strong>
+                    </div>
+                    <div class="hub-metrics-row">
+                        <span>Pre-autorización de seguridad:</span>
+                        <strong style="color: var(--evcse-energy-green);">$10.000 COP</strong>
+                    </div>
+                </div>
+
+                <p style="font-size: 11px; color: var(--evcse-silver); line-height: 1.5; margin: 0 4px 18px;">
+                    * La pre-autorización no es un cargo adicional. Se descontará automáticamente del valor final
+                    consumido en energía al desconectar.
+                </p>
+
+                <button class="btn-primary" onclick="confirmExperienceBooking()">
+                    Confirmar y Preparar Experiencia
+                </button>
+            </div>
+
+            <!-- ------------------------------------------------------------------
+                 SCREEN 10: VIRTUAL QUEUE ("MIENTRAS ESPERAS")
+                 ------------------------------------------------------------------ -->
+            <div class="screen" id="screen-10">
+                <div class="screen-top-header">
+                    <button class="header-btn-back" onclick="navigateToScreen(4)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                    </button>
+                    <span class="screen-header-title">Fila Virtual</span>
+                    <span class="header-badge">En Espera</span>
+                </div>
+
+                <div class="queue-clock-highlight">
+                    <h4>Tu cargador estará listo en</h4>
+                    <div class="queue-time-big">08 MIN</div>
+                    <div style="font-size: 13px; color: var(--evcse-cloud); font-weight: 600; margin-top: 6px;">
+                        Posición en turno: #2 • Bahía 02 liberándose
+                    </div>
+                </div>
+
+                <div class="ev-card">
+                    <h4
+                        style="font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--evcse-cloud); margin-bottom: 6px;">
+                        Mientras esperas tu turno
+                    </h4>
+                    <p style="font-size: 12px; color: var(--evcse-silver); line-height: 1.5; margin-bottom: 12px;">
+                        El centro de experiencia ya está abierto para ti. Presenta tu código QR para ingresar antes de
+                        conectar el vehículo.
+                    </p>
+
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn-secondary" style="font-size: 12px;"
+                            onclick="triggerToast('Lounge Abierto', 'Tu pase de cortesía ha sido validado')">
+                            Ingresar a Cafetería
+                        </button>
+                        <button class="btn-secondary" style="font-size: 12px;"
+                            onclick="triggerToast('Wi-Fi', 'Conectado a EVCSE-GUEST')">
+                            Conectar Wi-Fi
+                        </button>
+                    </div>
+                </div>
+
+                <button class="btn-primary" onclick="navigateToScreen(11)">
+                    Llegué al Tótem (Conectar Cable)
+                </button>
+            </div>
+
+            <!-- ------------------------------------------------------------------
+                 SCREEN 11: PRE-CHARGE (FINANCIAL CERTAINTY)
+                 ------------------------------------------------------------------ -->
+            <div class="screen" id="screen-11">
+                <div class="screen-top-header">
+                    <button class="header-btn-back" onclick="navigateToScreen(4)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                    </button>
+                    <span class="screen-header-title">Resumen Pre-Carga</span>
+                    <div style="width: 40px;"></div>
+                </div>
+
+                <div class="ev-card ev-card-forest">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <div>
+                            <h4 style="font-size: 14px; font-weight: 700; color: var(--evcse-cloud);">Tesla Model E</h4>
+                            <p style="font-size: 11px; color: var(--evcse-silver);">Bahía 03 • Conector CCS2 / NACS (240
+                                kW)</p>
+                        </div>
+                        <span class="tag-pill tag-green">Listo para Conectar</span>
+                    </div>
+
+                    <div class="hub-metrics-row" style="margin-bottom: 8px;">
+                        <span>Tarifa por kWh:</span>
+                        <strong>$1.850 COP</strong>
+                    </div>
+                    <div class="hub-metrics-row" style="margin-bottom: 8px;">
+                        <span>Límite objetivo:</span>
+                        <strong style="color: var(--evcse-energy-green);">80% (Salud Óptima de Batería)</strong>
+                    </div>
+                    <div class="hub-metrics-row" style="margin-bottom: 8px;">
+                        <span>Energía estimada:</span>
+                        <strong>~26.0 kWh</strong>
+                    </div>
+                    <div class="hub-metrics-row">
+                        <span>Total estimado a pagar:</span>
+                        <strong style="font-size: 16px; color: var(--evcse-cloud);">$48.100 COP</strong>
+                    </div>
+                </div>
+
+                <div class="ev-card">
+                    <h5 style="font-size: 12px; font-weight: 600; color: var(--evcse-silver); margin-bottom: 8px;">
+                        MÉTODO DE PAGO VINCULADO
+                    </h5>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="color: var(--evcse-energy-green); font-size: 18px;">💳</span>
+                            <div>
+                                <h4 style="font-size: 13px; font-weight: 600; color: var(--evcse-cloud);">Visa ****4456
+                                </h4>
+                                <p style="font-size: 11px; color: var(--evcse-silver);">Factura Electrónica Directa DIAN
+                                </p>
+                            </div>
+                        </div>
+                        <span class="tag-pill">Predeterminado</span>
+                    </div>
+                </div>
+
+                <button class="btn-primary" onclick="startChargingSessionLive()">
+                    <span>⚡</span> INICIAR CARGA Y VIVIR EXPERIENCIA
+                </button>
+            </div>
+
+            <!-- ------------------------------------------------------------------
+                 SCREEN 12: ACTIVE VALUE CHARGING (VALUE CLOCK™ FLAGSHIP)
+                 ------------------------------------------------------------------ -->
+            <div class="screen" id="screen-12">
+                <div class="screen-top-header">
+                    <span class="header-badge">SESIÓN EN VIVO</span>
+                    <span class="screen-header-title">Tiempo de Valor™</span>
+                    <button class="header-btn-back" onclick="navigateToScreen(16)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                            <line x1="12" y1="17" x2="12.01" y2="17" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- VALUE CLOCK™ SIGNATURE COMPONENT -->
+                <div class="value-clock-wrapper">
+                    <svg class="value-clock-svg" viewBox="0 0 250 250">
+                        <!-- Outer Ring: Vehicle Battery Track & Fill -->
+                        <circle class="clock-outer-track" cx="125" cy="125" r="110" />
+                        <circle class="clock-outer-fill" id="clock-outer-fill" cx="125" cy="125" r="110" />
+
+                        <!-- Inner Ring: Human Time Track & Fill -->
+                        <circle class="clock-inner-track" cx="125" cy="125" r="90" />
+                        <circle class="clock-inner-fill" id="clock-inner-fill" cx="125" cy="125" r="90" />
+                    </svg>
+
+                    <div class="value-clock-center">
+                        <div class="clock-val-num" id="live-time-remaining">18 MIN</div>
+                        <div class="clock-val-sub">PARA TI™</div>
+                        <div class="clock-experience-tag">
+                            <span>💼</span> The Work Lounge
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Telemetry Metrics Grid -->
+                <div class="telemetry-split-grid">
+                    <div class="telemetry-metric-tile">
+                        <h6>Batería del Vehículo</h6>
+                        <div class="tile-val" id="live-soc-display">52% <span>SoC</span></div>
+                    </div>
+                    <div class="telemetry-metric-tile">
+                        <h6>Potencia Activa</h6>
+                        <div class="tile-val" id="live-power-display">148.2 <span>kW</span></div>
+                    </div>
+                    <div class="telemetry-metric-tile">
+                        <h6>Energía Transferida</h6>
+                        <div class="tile-val" id="live-kwh-display">4.2 <span>kWh</span></div>
+                    </div>
+                    <div class="telemetry-metric-tile">
+                        <h6>Costo Acumulado</h6>
+                        <div class="tile-val" id="live-cost-display">$7.770 <span>COP</span></div>
+                    </div>
+                </div>
+
+                <!-- T-5 Proactive Alert -->
+                <div class="t-minus-five-alert" id="t-5-alert" style="display: none;">
+                    <span>⚠️</span>
+                    <div>
+                        <strong>Tu vehículo estará listo en 5 minutos.</strong>
+                        <p style="font-size: 11px; margin-top: 1px;">Buen momento para concluir tus actividades en el
+                            Lounge.</p>
+                    </div>
+                </div>
+
+                <!-- Action Button -->
+                <button class="btn-secondary" style="border-color: rgba(255, 82, 82, 0.4); color: var(--status-error);"
+                    onclick="stopChargingSessionLive()">
+                    Detener Carga y Desconectar
+                </button>
+            </div>
+
+            <!-- ------------------------------------------------------------------
+                 SCREEN 13: CHARGING COMPLETION ("YOUR VALUE SESSION")
+                 ------------------------------------------------------------------ -->
+            <div class="screen" id="screen-13">
+                <div class="screen-top-header">
+                    <span class="header-badge" style="background: rgba(0, 255, 76, 0.2);">COMPLETADO</span>
+                    <span class="screen-header-title">Sesión de Valor</span>
+                    <div style="width: 40px;"></div>
+                </div>
+
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div
+                        style="width: 54px; height: 54px; border-radius: 50%; background: rgba(0, 255, 76, 0.15); color: var(--evcse-energy-green); font-size: 24px; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px;">
+                        ✓
+                    </div>
+                    <h2
+                        style="font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--evcse-cloud);">
+                        Carga y Experiencia Completadas
+                    </h2>
+                    <p style="font-size: 12px; color: var(--evcse-silver); margin-top: 2px;">
+                        Conector desbloqueado con seguridad
+                    </p>
+                </div>
+
+                <!-- Dual Summary: Vehicle + Person -->
+                <div class="ev-card ev-card-forest">
+                    <h4
+                        style="font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--evcse-energy-green); margin-bottom: 8px;">
+                        TU VEHÍCULO AVANZÓ
+                    </h4>
+                    <div class="hub-metrics-row" style="margin-bottom: 6px;">
+                        <span>Batería final:</span>
+                        <strong id="summary-final-soc">80% (+152 km)</strong>
+                    </div>
+                    <div class="hub-metrics-row" style="margin-bottom: 6px;">
+                        <span>Energía entregada:</span>
+                        <strong id="summary-final-kwh">26.2 kWh</strong>
+                    </div>
+                    <div class="hub-metrics-row" style="margin-bottom: 6px;">
+                        <span>Total facturado:</span>
+                        <strong id="summary-final-cost" style="color: var(--evcse-cloud); font-size: 15px;">$48.470
+                            COP</strong>
+                    </div>
+                    <div class="hub-metrics-row">
+                        <span>Emisiones evitadas:</span>
+                        <strong style="color: var(--evcse-energy-green);">🌿 16.8 kg CO2e</strong>
+                    </div>
+                </div>
+
+                <div class="ev-card">
+                    <h4
+                        style="font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--evcse-cloud); margin-bottom: 8px;">
+                        TU TIEMPO DE VALOR™
+                    </h4>
+                    <p style="font-size: 12px; color: var(--evcse-silver); line-height: 1.5;">
+                        Disfrutaste de <strong>18 minutos productivos</strong> en The Work Lounge Calle 93 con 1
+                        espresso doble de cortesía.
+                    </p>
+                </div>
+
+                <div style="display: flex; gap: 8px; margin-top: 14px;">
+                    <button class="btn-secondary"
+                        onclick="triggerToast('Factura DIAN', 'Descargando XML y PDF de factura electrónica...')">
+                        Factura DIAN (PDF)
+                    </button>
+                    <button class="btn-primary" onclick="navigateToScreen(4)">
+                        Volver al Inicio
+                    </button>
+                </div>
+            </div>
+
+            <!-- ------------------------------------------------------------------
+                 SCREEN 14: EVCSE PASS (DIGITAL WALLET & MEMBERSHIP)
+                 ------------------------------------------------------------------ -->
+            <div class="screen" id="screen-14">
+                <div class="screen-top-header">
+                    <span class="screen-header-title">EVCSE Pass</span>
+                    <span class="header-badge">MEMBER 3.0</span>
+                </div>
+
+                <!-- Digital Member Card -->
+                <div class="evcse-pass-card">
+                    <div class="pass-watermark">⚡</div>
+                    <div class="pass-top-row">
+                        <h3>EVCSE PASS</h3>
+                        <span class="pass-tier-badge">ELITE MEMBER</span>
+                    </div>
+
+                    <div class="pass-holder-name">Juan Camilo Mercado</div>
+                    <div class="pass-vehicle-label">Tesla Model E • TSL-882</div>
+
+                    <div class="pass-metrics-row">
+                        <div>
+                            <span style="font-size: 10px; color: var(--evcse-silver); text-transform: uppercase;">Saldo
+                                Prepago</span>
+                            <h4
+                                style="font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--evcse-cloud);">
+                                $120.000</h4>
+                        </div>
+                        <div>
+                            <span style="font-size: 10px; color: var(--evcse-silver); text-transform: uppercase;">Tiempo
+                                de Valor</span>
+                            <h4
+                                style="font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--evcse-energy-green);">
+                                48.5 Horas</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Wallet Quick Links -->
+                <div class="ev-card">
+                    <h4 style="font-size: 13px; font-weight: 600; color: var(--evcse-cloud); margin-bottom: 12px;">
+                        Gestión Financiera &amp; Pagos
+                    </h4>
+
+                    <div class="hub-metrics-row" style="margin-bottom: 12px; cursor: pointer;"
+                        onclick="triggerToast('Billetera', 'Métodos de pago actualizados')">
+                        <span style="display: flex; align-items: center; gap: 8px;">
+                            <span>💳</span> Visa Corporativa (****4456)
+                        </span>
+                        <strong style="color: var(--evcse-energy-green);">Principal</strong>
+                    </div>
+
+                    <div class="hub-metrics-row" style="margin-bottom: 12px; cursor: pointer;"
+                        onclick="triggerToast('DIAN', 'RUT 901.442.880-1 activo')">
+                        <span style="display: flex; align-items: center; gap: 8px;">
+                            <span>📑</span> Facturación Automática (NIT / RUT)
+                        </span>
+                        <strong>Configurado</strong>
+                    </div>
+
+                    <div class="hub-metrics-row" style="cursor: pointer;"
+                        onclick="triggerToast('NFC', 'Token listo para Apple / Google Wallet')">
+                        <span style="display: flex; align-items: center; gap: 8px;">
+                            <span>📲</span> Token NFC / Apple Wallet
+                        </span>
+                        <strong style="color: var(--evcse-energy-green);">Sincronizado</strong>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn-secondary" style="flex: 1;" onclick="navigateToScreen(15)">
+                        Historial &amp; DIAN
+                    </button>
+                    <button class="btn-secondary"
+                        style="flex: 1; border-color: rgba(255, 82, 82, 0.4); color: var(--status-error);"
+                        onclick="logoutUser()">
+                        Cerrar Sesión
+                    </button>
+                </div>
+            </div>
+
+            <!-- ------------------------------------------------------------------
+                 SCREEN 15: ACTIVITY (SESSIONS & TAX INVOICES)
+                 ------------------------------------------------------------------ -->
+            <div class="screen" id="screen-15">
+                <div class="screen-top-header">
+                    <button class="header-btn-back" onclick="navigateToScreen(14)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                    </button>
+                    <span class="screen-header-title">Actividad &amp; Facturas</span>
+                    <div style="width: 40px;"></div>
+                </div>
+
+                <div class="ev-card" style="margin-bottom: 12px;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <h4 style="font-size: 14px; font-weight: 700; color: var(--evcse-cloud);">Hub Calle 93</h4>
+                        <span class="tag-pill tag-green">Pagado</span>
+                    </div>
+                    <p style="font-size: 11px; color: var(--evcse-silver); margin-bottom: 8px;">
+                        Hoy • 18 min de carga • 26.2 kWh (240 kW DC)
+                    </p>
+                    <div class="hub-metrics-row">
+                        <span>Total: <strong>$48.470 COP</strong></span>
+                        <a href="javascript:void(0)"
+                            style="font-size: 11px; color: var(--evcse-energy-green); text-decoration: none;"
+                            onclick="triggerToast('DIAN', 'Descargando CUFE...')">Factura DIAN ↓</a>
+                    </div>
+                </div>
+
+                <div class="ev-card" style="margin-bottom: 12px;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <h4 style="font-size: 14px; font-weight: 700; color: var(--evcse-cloud);">Hub Usaquén</h4>
+                        <span class="tag-pill">Pagado</span>
+                    </div>
+                    <p style="font-size: 11px; color: var(--evcse-silver); margin-bottom: 8px;">
+                        Ayer • 24 min de carga • 34.0 kWh (180 kW DC)
+                    </p>
+                    <div class="hub-metrics-row">
+                        <span>Total: <strong>$62.900 COP</strong></span>
+                        <a href="javascript:void(0)"
+                            style="font-size: 11px; color: var(--evcse-energy-green); text-decoration: none;"
+                            onclick="triggerToast('DIAN', 'Descargando CUFE...')">Factura DIAN ↓</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ------------------------------------------------------------------
+                 SCREEN 16: EVCSE ASSIST (CONTEXT-AWARE PROBLEM RESOLUTION)
+                 ------------------------------------------------------------------ -->
+            <div class="screen" id="screen-16">
+                <div class="screen-top-header">
+                    <button class="header-btn-back" onclick="navigateToScreen(4)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                    </button>
+                    <span class="screen-header-title">EVCSE Assist</span>
+                    <span class="header-badge">NOC 24/7</span>
+                </div>
+
+                <!-- Contextual Session Binding -->
+                <div class="assist-session-attached-card">
+                    <div class="assist-session-header">
+                        <span>SESIÓN VINCULADA AUTOMÁTICAMENTE</span>
+                        <span style="color: var(--evcse-energy-green);">EN LÍNEA</span>
+                    </div>
+                    <h4 style="font-size: 13px; font-weight: 700; color: var(--evcse-cloud);">
+                        Hub Calle 93 • Bahía 03 (CCS2 240 kW)
+                    </h4>
+                    <p style="font-size: 11px; color: var(--evcse-silver); margin-top: 2px;">
+                        Telemetría OCPP vinculada al diagnóstico de soporte.
+                    </p>
+                </div>
+
+                <h4
+                    style="font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--evcse-cloud); margin-bottom: 12px;">
+                    ¿Qué podemos resolver por ti?
+                </h4>
+
+                <button class="assist-issue-btn" onclick="openContextResolution('unlock')">
+                    <span>🔌 El conector no se libera del vehículo</span>
+                    <span>→</span>
+                </button>
+
+                <button class="assist-issue-btn" onclick="openContextResolution('slow')">
+                    <span>⚡ La velocidad de carga es menor a la esperada</span>
+                    <span>→</span>
+                </button>
+
+                <button class="assist-issue-btn" onclick="openContextResolution('lounge')">
+                    <span>☕ Inconveniente con el acceso al Work Lounge</span>
+                    <span>→</span>
+                </button>
+
+                <button class="assist-issue-btn" onclick="openContextResolution('billing')">
+                    <span>💳 Consulta sobre tarifas o pre-autorización</span>
+                    <span>→</span>
+                </button>
+
+                <div style="margin-top: 18px;">
+                    <button class="btn-secondary"
+                        onclick="triggerToast('Centro de Control', 'Conectando con operador NOC vía VoIP...')">
+                        Hablar con Ingeniero EVCSE (Voz 24/7)
+                    </button>
+                </div>
+            </div>
+
+            <!-- ------------------------------------------------------------------
+                 SCREEN 17: VEHICLE PROFILE
+                 ------------------------------------------------------------------ -->
+            <div class="screen" id="screen-17">
+                <div class="screen-top-header">
+                    <button class="header-btn-back" onclick="navigateToScreen(4)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                    </button>
+                    <span class="screen-header-title">Mi Vehículo</span>
+                    <div style="width: 40px;"></div>
+                </div>
+
+                <div class="ev-card ev-card-forest">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <h3
+                            style="font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--evcse-cloud);">
+                            Tesla Model E
+                        </h3>
+                        <span class="tag-pill tag-green">Principal</span>
+                    </div>
+                    <p style="font-size: 12px; color: var(--evcse-silver); margin-bottom: 14px;">
+                        Placa: TSL-882 • Batería: 75.0 kWh Lithium-Ion
+                    </p>
+
+                    <div class="hub-metrics-row" style="margin-bottom: 8px;">
+                        <span>Conector primario:</span>
+                        <strong>CCS2 / NACS Ultra-Fast</strong>
+                    </div>
+                    <div class="hub-metrics-row" style="margin-bottom: 8px;">
+                        <span>Potencia de carga pico:</span>
+                        <strong>240 kW DC</strong>
+                    </div>
+                    <div class="hub-metrics-row">
+                        <span>Límite de salud recomendado:</span>
+                        <strong style="color: var(--evcse-energy-green);">80% SoC (Diario) / 100% (Viaje)</strong>
+                    </div>
+                </div>
+
+                <div class="ev-card">
+                    <h4 style="font-size: 13px; font-weight: 600; color: var(--evcse-cloud); margin-bottom: 12px;">
+                        Preferencias de Experiencia
+                    </h4>
+                    <div class="hub-metrics-row" style="margin-bottom: 8px;">
+                        <span>Espacio favorito:</span>
+                        <strong>The Work Lounge</strong>
+                    </div>
+                    <div class="hub-metrics-row" style="margin-bottom: 8px;">
+                        <span>Bebida habitual:</span>
+                        <strong>Americano Huila (Doble)</strong>
+                    </div>
+                    <div class="hub-metrics-row">
+                        <span>Alertas proactivas:</span>
+                        <strong style="color: var(--evcse-energy-green);">T-10m &amp; T-5m Activas</strong>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn-secondary" style="flex: 1;" onclick="navigateToScreen(4)">
+                        Volver a Inicio
+                    </button>
+                    <button class="btn-secondary"
+                        style="flex: 1; border-color: rgba(255, 82, 82, 0.4); color: var(--status-error);"
+                        onclick="logoutUser()">
+                        Cerrar Sesión
+                    </button>
+                </div>
+            </div>
+
+        </div> <!-- End Screens Viewport -->
+
+        <!-- ======================================================================
+             GLOBAL BOTTOM NAVIGATION DOCK (5 HUBS)
+             ====================================================================== -->
+        <nav class="bottom-nav-dock" id="main-nav-dock" aria-label="Navegación Principal">
+            <!-- Hub 1: HOME -->
+            <div class="nav-item active" id="nav-item-home" onclick="navigateToScreen(4)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
+                <span>Inicio</span>
+            </div>
+
+            <!-- Hub 2: EXPLORE -->
+            <div class="nav-item" id="nav-item-explore" onclick="navigateToScreen(6)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21" />
+                    <line x1="9" y1="3" x2="9" y2="18" />
+                    <line x1="15" y1="6" x2="15" y2="21" />
+                </svg>
+                <span>Explorar</span>
+            </div>
+
+            <!-- Hub 3: HERO CHARGE BUTTON (CENTER ELEVATED) -->
+            <div class="nav-item-hero" onclick="onCenterChargeTap()">
+                <div class="hero-charge-disc" id="hero-charge-disc">
+                    <svg viewBox="0 0 24 24" stroke="currentColor">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                    </svg>
+                </div>
+                <span id="hero-charge-label">Cargar</span>
+            </div>
+
+            <!-- Hub 4: ACTIVITY -->
+            <div class="nav-item" id="nav-item-activity" onclick="navigateToScreen(15)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                </svg>
+                <span>Actividad</span>
+            </div>
+
+            <!-- Hub 5: PROFILE / PASS -->
+            <div class="nav-item" id="nav-item-pass" onclick="navigateToScreen(14)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <rect x="3" y="5" width="18" height="14" rx="2" />
+                    <polyline points="3 10 21 10" />
+                </svg>
+                <span>Pass</span>
+            </div>
+        </nav>
+
+        <!-- ======================================================================
+             ERROR & CONTINGENCY RESOLUTION MODAL
+             ====================================================================== -->
+        <div class="error-modal-overlay" id="error-modal" onclick="closeErrorModal(event)">
+            <div class="error-modal-card" onclick="event.stopPropagation()">
+                <span class="error-card-badge" id="modal-error-badge">DIAGNÓSTICO EVCSE</span>
+
+                <div class="error-field-block">
+                    <h6>Qué ocurrió</h6>
+                    <p id="modal-error-occurred">El conector de la bahía no detecta inserción completa.</p>
+                </div>
+
+                <div class="error-field-block">
+                    <h6>Qué significa</h6>
+                    <p id="modal-error-means">El seguro mecánico no se cerró para iniciar el handshake de alta tensión.
+                    </p>
+                </div>
+
+                <div class="error-field-block">
+                    <h6>Qué debes hacer</h6>
+                    <p id="modal-error-action">Empuja el conector CCS2 firmemente hasta escuchar el clic de seguridad.
+                    </p>
+                </div>
+
+                <div style="display: flex; gap: 8px; margin-top: 18px;">
+                    <button class="btn-primary" onclick="resolveModalAction()">
+                        Reintentar Handshake
+                    </button>
+                    <button class="btn-secondary" onclick="closeErrorModal()">
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ==========================================================================
+         APPLICATION LOGIC & TELEMETRY ENGINE (JAVASCRIPT)
+         ========================================================================== -->
+    <script>
+        // Global State Machine
+        let currentScreen = 1;
+        let onboardingSlideIndex = 1;
+        let isChargingActive = false;
+        let isLowConnectivity = false;
+
+        // Telemetry Engine Variables
+        let telemetryTimer = null;
+        let liveSecondsElapsed = 0;
+        let liveKwhDelivered = 4.2;
+        let liveCurrentSoc = 52;
+        let liveTargetSoc = 80;
+        let livePowerKw = 148.2;
+        let userAvailableMinutes = 30;
+
+        // Auto Transition from Splash (Screen 1) to Screen 3 (Login & Registro)
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                if (currentScreen === 1) {
+                    navigateToScreen(3); // Start with Login / Registro as requested
+                }
+            }, 2000);
+        });
+
+        // Screen Navigation Engine
+        function navigateToScreen(screenNum) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+
+            const target = document.getElementById(`screen-${screenNum}`);
+            if (target) {
+                target.classList.add('active');
+                target.scrollTop = 0;
+                currentScreen = screenNum;
+            }
+
+            // Nav dock visibility rule: Hide on Splash (1), Onboarding (2), and Login/Register (3)
+            const navDock = document.getElementById('main-nav-dock');
+            if (screenNum <= 3) {
+                navDock.classList.add('hidden');
+            } else {
+                navDock.classList.remove('hidden');
+            }
+
+            // Sync Nav Item highlighting
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            if (screenNum === 4) document.getElementById('nav-item-home')?.classList.add('active');
+            if (screenNum === 6 || screenNum === 7) document.getElementById('nav-item-explore')?.classList.add('active');
+            if (screenNum === 14) document.getElementById('nav-item-pass')?.classList.add('active');
+            if (screenNum === 15) document.getElementById('nav-item-activity')?.classList.add('active');
+
+            // Handle Active Dwell Floating Mini-Bar
+            const miniBar = document.getElementById('dwell-mini-bar');
+            if (isChargingActive && (screenNum === 4 || screenNum === 6 || screenNum === 14 || screenNum === 15)) {
+                miniBar.classList.add('visible');
+            } else {
+                miniBar.classList.remove('visible');
+            }
+        }
+
+        // Onboarding Carousel
+        function nextOnboardingSlide() {
+            onboardingSlideIndex++;
+            if (onboardingSlideIndex > 3) {
+                navigateToScreen(3); // Enter Login / Register
+                return;
+            }
+
+            document.querySelectorAll('.onboarding-slide').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.dot-indicator').forEach(d => d.classList.remove('active'));
+
+            document.getElementById(`slide-${onboardingSlideIndex}`).classList.add('active');
+            document.getElementById(`dot-${onboardingSlideIndex}`).classList.add('active');
+        }
+
+        // Auth Tabs & Handlers
+        function switchAuthTab(tab) {
+            const btnLogin = document.getElementById('tab-btn-login');
+            const btnReg = document.getElementById('tab-btn-register');
+            const panelLogin = document.getElementById('panel-login');
+            const panelReg = document.getElementById('panel-register');
+
+            if (tab === 'register') {
+                btnLogin.classList.remove('active');
+                btnReg.classList.add('active');
+                panelLogin.classList.remove('active');
+                panelReg.classList.add('active');
+            } else {
+                btnReg.classList.remove('active');
+                btnLogin.classList.add('active');
+                panelReg.classList.remove('active');
+                panelLogin.classList.add('active');
+            }
+        }
+
+        function togglePasswordVisibility(inputId) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+
+        function handleLoginSubmit() {
+            const email = document.getElementById('login-email')?.value || 'juan.mercado@empresa.com';
+            const name = email.split('@')[0].replace('.', ' ');
+            triggerToast("¡Bienvenido!", `Sesión iniciada correctamente (${name})`);
+            navigateToScreen(4); // Home
+        }
+
+        function handleRegisterSubmit() {
+            const vehicle = document.getElementById('reg-vehicle')?.value || 'Tesla Model E';
+            const plate = document.getElementById('reg-plate')?.value || 'TSL-882';
+            triggerToast("Cuenta Creada", `EVCSE Pass activado para tu ${vehicle} (${plate})`);
+            navigateToScreen(4); // Home
+        }
+
+        function handlePasskeyLogin() {
+            triggerToast("Passkey Verificado", "Autenticación biométrica exitosa");
+            navigateToScreen(4);
+        }
+
+        function logoutUser() {
+            triggerToast("Sesión Cerrada", "Vuelve pronto a EVCSE");
+            navigateToScreen(3); // Login / Registro
+        }
+
+        function onStatusChipTap() {
+            if (isChargingActive) {
+                navigateToScreen(12);
+            } else {
+                triggerToast("Red EVCSE", "Conectado a Hub Calle 93 • 240 kW DC disponible");
+            }
+        }
+
+        // Hero Center Charge Button
+        function onCenterChargeTap() {
+            if (isChargingActive) {
+                navigateToScreen(12); // Go to live Value Clock
+            } else {
+                navigateToScreen(11); // Open Pre-charge setup
+            }
+        }
+
+        // Value Intent Picker
+        function selectIntent(el, intentName) {
+            document.querySelectorAll('.intent-card').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+            triggerToast("Intención Seleccionada", `Experiencia adaptada: ${intentName}`);
+        }
+
+        // Smart Planner Adjusters
+        function updatePlannerTarget(val) {
+            document.getElementById('planner-target-label').innerText = `${val}%`;
+            liveTargetSoc = parseInt(val);
+        }
+
+        function selectTimeChip(el, mins) {
+            document.querySelectorAll('.time-chip').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+            userAvailableMinutes = mins;
+        }
+
+        function confirmExperienceBooking() {
+            triggerToast("Experiencia Reservada", "Bahía 03 y The Work Lounge listos");
+            navigateToScreen(10); // Show queue/arrival guidance
+        }
+
+        // Live Charging Telemetry Engine (Value Clock™ Simulation)
+        function startChargingSessionLive() {
+            isChargingActive = true;
+            liveSecondsElapsed = 0;
+            liveKwhDelivered = 4.2;
+            liveCurrentSoc = 52;
+            navigateToScreen(12);
+
+            // Update Header Status Chip
+            const chipText = document.getElementById('chip-status-text');
+            if (chipText) chipText.innerText = `52% • 18 min`;
+
+            // Hero Disc styling
+            document.getElementById('hero-charge-disc').style.background = "linear-gradient(145deg, #00FF4C 0%, #063D2E 100%)";
+            document.getElementById('hero-charge-label').innerText = "En Vivo";
+
+            if (telemetryTimer) clearInterval(telemetryTimer);
+
+            telemetryTimer = setInterval(() => {
+                liveSecondsElapsed += 1;
+                liveKwhDelivered += 0.08;
+
+                if (liveSecondsElapsed % 3 === 0 && liveCurrentSoc < liveTargetSoc) {
+                    liveCurrentSoc += 1;
+                }
+
+                // Random slight power fluctuation
+                livePowerKw = (148.0 + (Math.random() * 3 - 1.5)).toFixed(1);
+                const currentCost = Math.round(liveKwhDelivered * 1850);
+                const remainingMinutes = Math.max(1, 18 - Math.floor(liveSecondsElapsed / 4));
+
+                // Update UI elements on Screen 12
+                document.getElementById('live-soc-display').innerHTML = `${liveCurrentSoc}% <span>SoC</span>`;
+                document.getElementById('live-power-display').innerHTML = `${livePowerKw} <span>kW</span>`;
+                document.getElementById('live-kwh-display').innerHTML = `${liveKwhDelivered.toFixed(2)} <span>kWh</span>`;
+                document.getElementById('live-cost-display').innerHTML = `$${currentCost.toLocaleString('es-CO')} <span>COP</span>`;
+                document.getElementById('live-time-remaining').innerText = `${remainingMinutes} MIN`;
+
+                // Update Mini-Bar & Header Chip
+                document.getElementById('dwell-mini-soc').innerText = `Carga en curso: ${liveCurrentSoc}%`;
+                document.getElementById('dwell-mini-sub').innerText = `${remainingMinutes} min para ti • The Work Lounge`;
+                if (chipText) chipText.innerText = `${liveCurrentSoc}% • ${remainingMinutes} min`;
+
+                // Update Value Clock Dual Rings (SVG Dashoffsets)
+                // Outer ring circumference = 2 * PI * 110 ≈ 691.15
+                const outerProgress = liveCurrentSoc / 100;
+                const outerOffset = 691 - (691 * outerProgress);
+                document.getElementById('clock-outer-fill').style.strokeDashoffset = outerOffset;
+
+                // Inner ring circumference = 2 * PI * 90 ≈ 565.48
+                const innerProgress = Math.max(0.1, remainingMinutes / 18);
+                const innerOffset = 565 - (565 * innerProgress);
+                document.getElementById('clock-inner-fill').style.strokeDashoffset = innerOffset;
+
+                // T-5 Minutes Proactive Alert trigger
+                if (remainingMinutes <= 5) {
+                    document.getElementById('t-5-alert').style.display = "flex";
+                }
+
+                // Auto stop when hitting target
+                if (liveCurrentSoc >= liveTargetSoc) {
+                    stopChargingSessionLive();
+                }
+            }, 1000);
+        }
+
+        function stopChargingSessionLive() {
+            if (telemetryTimer) clearInterval(telemetryTimer);
+            isChargingActive = false;
+
+            // Reset Header Chip
+            const chipText = document.getElementById('chip-status-text');
+            if (chipText) chipText.innerText = "Hub 93 • 240 kW";
+
+            // Reset Hero Disc
+            document.getElementById('hero-charge-disc').style.background = "linear-gradient(145deg, #0A4E3B 0%, #063D2E 100%)";
+            document.getElementById('hero-charge-label').innerText = "Cargar";
+
+            // Hide Mini-Bar
+            document.getElementById('dwell-mini-bar').classList.remove('visible');
+
+            // Populate Completion Screen
+            document.getElementById('summary-final-soc').innerText = `${liveCurrentSoc}% (+152 km)`;
+            document.getElementById('summary-final-kwh').innerText = `${liveKwhDelivered.toFixed(1)} kWh`;
+            const finalCost = Math.round(liveKwhDelivered * 1850);
+            document.getElementById('summary-final-cost').innerText = `$${finalCost.toLocaleString('es-CO')} COP`;
+
+            navigateToScreen(13);
+        }
+
+        // Low Connectivity Mode Toggle
+        function toggleLowConnectivityMode() {
+            isLowConnectivity = !isLowConnectivity;
+            const badge = document.getElementById('home-connectivity-badge');
+            const chip = document.getElementById('chip-status-text');
+
+            if (isLowConnectivity) {
+                if (badge) badge.innerHTML = `<span class="status-dot" style="background:#F6B93B; box-shadow:none;"></span> Modo Local (hace 42s)`;
+                if (chip) chip.innerText = "Modo Local (Offline)";
+                triggerToast("Modo Baja Señal Activo", "Datos cargados desde almacenamiento local seguro.");
+            } else {
+                if (badge) badge.innerHTML = `<span class="status-dot"></span> Hub 93 Conectado`;
+                if (chip) chip.innerText = "Hub 93 • 240 kW";
+                triggerToast("Conexión Restablecida", "Sincronizado con centros EVCSE en tiempo real.");
+            }
+        }
+
+        // Context-Aware Support Modals (EVCSE Assist)
+        function openContextResolution(type) {
+            const modal = document.getElementById('error-modal');
+            const badge = document.getElementById('modal-error-badge');
+            const occurred = document.getElementById('modal-error-occurred');
+            const means = document.getElementById('modal-error-means');
+            const action = document.getElementById('modal-error-action');
+
+            if (type === 'unlock') {
+                badge.innerText = "RESOLUCIÓN DE CONECTOR";
+                occurred.innerText = "El vehículo mantiene activado el solenoide de bloqueo del conector CCS2.";
+                means.innerText = "El auto aún no completó la despresurización o el puerto está bloqueado.";
+                action.innerText = "Presiona el botón de desbloqueo en la pantalla central o en la app de tu Tesla Model E.";
+            } else if (type === 'slow') {
+                badge.innerText = "CURVA TÉRMICA DE BATERÍA";
+                occurred.innerText = "La velocidad de carga se ajustó a 75 kW DC.";
+                means.innerText = "El sistema de gestión de batería (BMS) está protegiendo la química celular por temperatura.";
+                action.innerText = "La estación mantendrá la entrega óptima permitida sin degradar tu batería.";
+            } else if (type === 'lounge') {
+                badge.innerText = "ACCESO THE WORK LOUNGE";
+                occurred.innerText = "Lector de acceso no leyó el código QR a la primera.";
+                means.innerText = "El sensor de la puerta requiere refresco de token criptográfico.";
+                action.innerText = "Presenta la pantalla de tu EVCSE Pass frente al escáner verde a 15 cm.";
+            } else {
+                badge.innerText = "TRANSPARENCIA DE TARIFAS";
+                occurred.innerText = "Pre-autorización de $10.000 COP en estado retenido.";
+                means.innerText = "No es un cobro bancario. Se libera automáticamente al emitir la factura final.";
+                action.innerText = "Revisa tu estado en Actividad o descarga tu factura electrónica DIAN.";
+            }
+
+            modal.classList.add('active');
+        }
+
+        function closeErrorModal(e) {
+            document.getElementById('error-modal').classList.remove('active');
+        }
+
+        function resolveModalAction() {
+            closeErrorModal();
+            triggerToast("Solución Aplicada", "Comando ejecutado remotamente con éxito.");
+        }
+
+        // Toast Helper
+        function triggerToast(title, body) {
+            const toast = document.getElementById('app-toast');
+            document.getElementById('toast-title').innerText = title;
+            document.getElementById('toast-body').innerText = body;
+
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3600);
+        }
+    </script>
+</body>
+
+</html>

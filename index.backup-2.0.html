@@ -1,0 +1,2421 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EVCSE — Carga con Certeza | Mobile App Experience</title>
+    <!-- Google Fonts: Sora -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* ==========================================
+       EVCSE DESIGN SYSTEM - DARK LUXURY
+       Colors:
+       - Black: #000000 / Surface: #080A0D / Card: #11161D
+       - EVCSE Green: #00FF4C
+       - Dark Green: #0E361A
+       - White: #FFFFFF
+       - Gray: #A8A8A8
+       ========================================== */
+        :root {
+            --bg-black: #000000;
+            --bg-surface: #07090C;
+            --bg-card: #11161D;
+            --bg-card-hover: #171E28;
+            --evcse-green: #00FF4C;
+            --evcse-green-glow: rgba(0, 255, 76, 0.4);
+            --evcse-green-dim: rgba(0, 255, 76, 0.12);
+            --dark-green: #0E361A;
+            --dark-green-border: rgba(0, 255, 76, 0.25);
+            --white: #FFFFFF;
+            --gray-light: #E0E0E0;
+            --gray-muted: #A8A8A8;
+            --gray-dark: #222B36;
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --glass-card: rgba(14, 54, 26, 0.25);
+            --shadow-green: 0 8px 32px rgba(0, 255, 76, 0.15);
+            --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.6);
+            --font-family: 'Sora', -apple-system, BlinkMacSystemFont, sans-serif;
+            --radius-xl: 28px;
+            --radius-lg: 20px;
+            --radius-md: 14px;
+            --radius-sm: 10px;
+            --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        body {
+            background-color: #030406;
+            color: var(--white);
+            font-family: var(--font-family);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            padding: 20px 0;
+        }
+
+        /* Device Simulator Controls Outer Header */
+        .simulator-control-bar {
+            position: fixed;
+            top: 12px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(17, 22, 29, 0.85);
+            backdrop-filter: blur(16px);
+            padding: 8px 16px;
+            border-radius: 40px;
+            border: 1px solid var(--dark-green-border);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        }
+
+        .sim-btn {
+            background: transparent;
+            border: 1px solid var(--border-glass);
+            color: var(--gray-muted);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-family: var(--font-family);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .sim-btn.active,
+        .sim-btn:hover {
+            background: var(--dark-green);
+            color: var(--evcse-green);
+            border-color: var(--evcse-green);
+        }
+
+        /* Device Container (iPhone 15 Frame Simulator) */
+        .device-container {
+            width: 390px;
+            height: 844px;
+            background-color: var(--bg-black);
+            border-radius: 50px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.95), 0 0 0 12px #1C222B, 0 0 0 14px #0A0D12, 0 0 40px rgba(0, 255, 76, 0.1);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.4s ease;
+        }
+
+        .device-container.full-screen-mode {
+            width: 100vw;
+            height: 100vh;
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        /* iPhone Dynamic Island & Status Bar */
+        .status-bar {
+            height: 48px;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 9000;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--white);
+            pointer-events: none;
+        }
+
+        .dynamic-island {
+            width: 110px;
+            height: 28px;
+            background: #000;
+            border-radius: 20px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            border: 0.5px solid rgba(255, 255, 255, 0.08);
+            pointer-events: auto;
+        }
+
+        .dynamic-island-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--evcse-green);
+            box-shadow: 0 0 8px var(--evcse-green);
+            animation: pulse-green 2s infinite;
+        }
+
+        @keyframes pulse-green {
+
+            0%,
+            100% {
+                opacity: 0.4;
+                transform: scale(0.9);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+        }
+
+        .status-bar-icons {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+        }
+
+        /* App Screen Viewport Wrapper */
+        .app-viewport {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            background-color: var(--bg-surface);
+            padding-top: 48px;
+            /* Space for status bar */
+        }
+
+        /* Individual Screen Base */
+        .screen {
+            position: absolute;
+            top: 48px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: calc(100% - 48px);
+            overflow-y: auto;
+            overflow-x: hidden;
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.97) translateY(10px);
+            transition: opacity 0.35s ease, transform 0.35s ease;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 90px;
+            /* Space for bottom nav */
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .screen.has-no-nav {
+            padding-bottom: 24px;
+        }
+
+        .screen.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1) translateY(0);
+            z-index: 10;
+        }
+
+        /* Custom Scrollbar */
+        .screen::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .screen::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .screen::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+        }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 84px;
+            background: rgba(7, 9, 12, 0.88);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 10px 20px 10px;
+            z-index: 8000;
+            transition: transform 0.3s ease;
+        }
+
+        .bottom-nav.hidden {
+            transform: translateY(100%);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            color: var(--gray-muted);
+            font-size: 10px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            width: 20%;
+            text-decoration: none;
+        }
+
+        .nav-item svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--gray-muted);
+            fill: none;
+            stroke-width: 2;
+            transition: var(--transition-fast);
+        }
+
+        .nav-item.active {
+            color: var(--evcse-green);
+        }
+
+        .nav-item.active svg {
+            stroke: var(--evcse-green);
+            filter: drop-shadow(0 0 6px var(--evcse-green-glow));
+        }
+
+        /* Center Charge Action Nav Button */
+        .nav-item.nav-charge-center {
+            position: relative;
+            top: -14px;
+        }
+
+        .nav-charge-btn {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--evcse-green) 0%, #00B335 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px var(--evcse-green-glow), 0 4px 15px rgba(0, 0, 0, 0.5);
+            border: 3px solid var(--bg-black);
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .nav-charge-btn svg {
+            width: 24px;
+            height: 24px;
+            stroke: #000 !important;
+            fill: #000 !important;
+        }
+
+        .nav-item.nav-charge-center:active .nav-charge-btn {
+            transform: scale(0.92);
+        }
+
+        /* Home Indicator Line */
+        .home-indicator {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 134px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            z-index: 9001;
+            pointer-events: none;
+        }
+
+        /* Common Components & UI Utilities */
+        .container-padding {
+            padding: 16px 20px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            padding: 18px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-card);
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition-fast);
+        }
+
+        .card-glass {
+            background: linear-gradient(135deg, rgba(14, 54, 26, 0.35) 0%, rgba(17, 22, 29, 0.6) 100%);
+            border: 1px solid var(--dark-green-border);
+            backdrop-filter: blur(12px);
+        }
+
+        .btn-primary {
+            width: 100%;
+            height: 54px;
+            background: linear-gradient(135deg, var(--evcse-green) 0%, #00CC3D 100%);
+            color: #000000;
+            font-family: var(--font-family);
+            font-size: 15px;
+            font-weight: 700;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 6px 24px var(--evcse-green-glow);
+            transition: var(--transition-fast);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 10px var(--evcse-green-glow);
+        }
+
+        .btn-secondary {
+            width: 100%;
+            height: 54px;
+            background: var(--dark-green);
+            border: 1px solid var(--dark-green-border);
+            color: var(--white);
+            font-family: var(--font-family);
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: var(--transition-fast);
+        }
+
+        .btn-secondary:active {
+            background: rgba(14, 54, 26, 0.8);
+            transform: scale(0.98);
+        }
+
+        .badge-green {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--evcse-green-dim);
+            color: var(--evcse-green);
+            border: 1px solid rgba(0, 255, 76, 0.3);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--evcse-green);
+            box-shadow: 0 0 6px var(--evcse-green);
+        }
+
+        .header-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--white);
+        }
+
+        .screen-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--white);
+            letter-spacing: -0.3px;
+        }
+
+        /* SCREEN 1: SPLASH */
+        #screen-1 {
+            background: #000;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 100;
+        }
+
+        .splash-logo-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .splash-glow-ring {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--evcse-green-glow) 0%, rgba(0, 0, 0, 0) 70%);
+            position: absolute;
+            animation: pulse-ring 2.5s infinite ease-in-out;
+        }
+
+        @keyframes pulse-ring {
+
+            0%,
+            100% {
+                transform: scale(0.8);
+                opacity: 0.3;
+            }
+
+            50% {
+                transform: scale(1.3);
+                opacity: 0.8;
+            }
+        }
+
+        .brand-logo-svg {
+            width: 80px;
+            height: 80px;
+            z-index: 2;
+        }
+
+        .splash-title {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: 4px;
+            color: var(--white);
+            margin-top: 24px;
+        }
+
+        .splash-title span {
+            color: var(--evcse-green);
+        }
+
+        .splash-tagline {
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            color: var(--gray-muted);
+            text-transform: uppercase;
+            margin-top: 8px;
+        }
+
+        /* SCREEN 2: ONBOARDING */
+        #screen-2 {
+            justify-content: space-between;
+            padding: 30px 24px 40px 24px;
+        }
+
+        .onboarding-slider {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        .onboarding-slide {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .onboarding-slide.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .onboarding-illustration {
+            width: 220px;
+            height: 220px;
+            background: radial-gradient(circle, var(--dark-green) 0%, rgba(11, 20, 15, 0.4) 100%);
+            border: 1px solid var(--dark-green-border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 36px;
+            box-shadow: 0 10px 40px rgba(0, 255, 76, 0.12);
+        }
+
+        .onboarding-h1 {
+            font-size: 26px;
+            font-weight: 800;
+            line-height: 1.3;
+            margin-bottom: 12px;
+        }
+
+        .onboarding-h1 span {
+            color: var(--evcse-green);
+        }
+
+        .onboarding-desc {
+            font-size: 14px;
+            color: var(--gray-muted);
+            line-height: 1.6;
+            max-width: 280px;
+        }
+
+        .dots-container {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 28px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--gray-dark);
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            width: 28px;
+            background: var(--evcse-green);
+            box-shadow: 0 0 10px var(--evcse-green-glow);
+        }
+
+        /* SCREEN 3: LOGIN */
+        #screen-3 {
+            padding: 40px 24px;
+            justify-content: space-between;
+        }
+
+        .login-brand-header {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .sso-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-top: 30px;
+        }
+
+        .btn-sso {
+            height: 52px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            color: var(--white);
+            font-family: var(--font-family);
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            gap: 14px;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .btn-sso:hover {
+            background: var(--bg-card-hover);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-sso svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--gray-muted);
+            font-size: 12px;
+            margin: 20px 0;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .input-field {
+            width: 100%;
+            height: 52px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            padding: 0 18px;
+            color: var(--white);
+            font-family: var(--font-family);
+            font-size: 14px;
+            outline: none;
+            transition: var(--transition-fast);
+            margin-bottom: 12px;
+        }
+
+        .input-field:focus {
+            border-color: var(--evcse-green);
+            box-shadow: 0 0 12px var(--evcse-green-dim);
+        }
+
+        /* SCREEN 4: HOME */
+        .user-greeting {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .user-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--dark-green) 0%, var(--bg-card) 100%);
+            border: 1.5px solid var(--evcse-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--evcse-green);
+        }
+
+        .vehicle-card {
+            background: linear-gradient(135deg, rgba(14, 54, 26, 0.4) 0%, rgba(17, 22, 29, 0.8) 100%);
+            border: 1px solid var(--dark-green-border);
+            border-radius: var(--radius-xl);
+            padding: 20px;
+            position: relative;
+            box-shadow: var(--shadow-card);
+            margin-bottom: 20px;
+        }
+
+        .vehicle-top-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .vehicle-name {
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .vehicle-sub {
+            font-size: 12px;
+            color: var(--gray-muted);
+        }
+
+        .battery-ring-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .soc-large {
+            font-size: 38px;
+            font-weight: 800;
+            color: var(--white);
+            line-height: 1;
+        }
+
+        .soc-large span {
+            font-size: 20px;
+            color: var(--evcse-green);
+        }
+
+        .autonomy-pill {
+            font-size: 13px;
+            color: var(--gray-light);
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 22px 0 14px 0;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .see-all-link {
+            font-size: 12px;
+            color: var(--evcse-green);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* SCREEN 5: MAP INTERACTIVE */
+        #screen-5 {
+            padding: 0;
+        }
+
+        .map-container-view {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background: #090D12;
+        }
+
+        .map-svg-canvas {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, #0E161F 0%, #07090C 100%);
+        }
+
+        .map-filter-pills {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            right: 16px;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            z-index: 20;
+            padding-bottom: 4px;
+        }
+
+        .map-filter-pills::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-pill {
+            background: rgba(17, 22, 29, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-glass);
+            color: var(--gray-muted);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .filter-pill.active {
+            background: var(--dark-green);
+            color: var(--evcse-green);
+            border-color: var(--evcse-green);
+        }
+
+        .station-marker-pin {
+            position: absolute;
+            cursor: pointer;
+            transform: translate(-50%, -100%);
+            transition: transform 0.2s ease;
+        }
+
+        .station-marker-pin:hover {
+            transform: translate(-50%, -100%) scale(1.15);
+            z-index: 30;
+        }
+
+        .marker-box {
+            background: rgba(7, 9, 12, 0.95);
+            border: 1.5px solid var(--evcse-green);
+            box-shadow: 0 0 16px var(--evcse-green-glow);
+            border-radius: 12px;
+            padding: 6px 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .map-bottom-sheet {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(11, 15, 20, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--dark-green-border);
+            border-radius: 24px 24px 0 0;
+            padding: 20px;
+            z-index: 40;
+        }
+
+        /* SCREEN 6: STATION DETAIL */
+        .station-hero-img {
+            width: 100%;
+            height: 180px;
+            border-radius: var(--radius-lg);
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.8) 100%),
+                url('https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=800&q=80') center/cover;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-end;
+            padding: 16px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 16px 0;
+        }
+
+        .service-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            padding: 12px 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            font-size: 10px;
+            color: var(--gray-muted);
+            text-align: center;
+        }
+
+        .service-item svg {
+            stroke: var(--evcse-green);
+            width: 20px;
+            height: 20px;
+        }
+
+        /* SCREEN 7: COMPATIBILITY */
+        .comp-vs-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 24px 0;
+            position: relative;
+        }
+
+        .comp-box {
+            flex: 1;
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            text-align: center;
+        }
+
+        .comp-vs-badge {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--dark-green);
+            border: 1px solid var(--evcse-green);
+            color: var(--evcse-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 12px;
+            margin: 0 10px;
+            z-index: 2;
+        }
+
+        /* SCREEN 8: BOOKING */
+        .calendar-strip {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            margin: 16px 0;
+            padding-bottom: 6px;
+        }
+
+        .date-card {
+            min-width: 60px;
+            height: 75px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            cursor: pointer;
+        }
+
+        .date-card.active {
+            background: var(--dark-green);
+            border-color: var(--evcse-green);
+            color: var(--evcse-green);
+        }
+
+        .slots-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .slot-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            color: var(--white);
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .slot-btn.selected {
+            background: var(--evcse-green);
+            color: #000;
+            font-weight: 700;
+        }
+
+        .slot-btn.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* SCREEN 9: VIRTUAL QUEUE */
+        .queue-ring-large {
+            width: 200px;
+            height: 200px;
+            margin: 30px auto;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .queue-ring-svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .queue-ring-bg {
+            stroke: var(--gray-dark);
+            stroke-width: 10;
+            fill: none;
+        }
+
+        .queue-ring-fill {
+            stroke: var(--evcse-green);
+            stroke-width: 10;
+            fill: none;
+            stroke-dasharray: 565;
+            stroke-dashoffset: 140;
+            stroke-linecap: round;
+            filter: drop-shadow(0 0 8px var(--evcse-green-glow));
+            transition: stroke-dashoffset 1s linear;
+        }
+
+        .queue-center-content {
+            position: absolute;
+            text-align: center;
+        }
+
+        /* SCREEN 10: PRE-CHARGE */
+        .charge-slider-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .range-input-custom {
+            width: 100%;
+            accent-color: var(--evcse-green);
+            height: 6px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* SCREEN 11: CHARGING LIVE DASHBOARD */
+        #screen-11 {
+            background: radial-gradient(circle at 50% 30%, rgba(14, 54, 26, 0.4) 0%, var(--bg-surface) 70%);
+        }
+
+        .live-battery-visual {
+            width: 170px;
+            height: 250px;
+            margin: 10px auto;
+            border: 3px solid var(--dark-green-border);
+            border-radius: 36px;
+            padding: 8px;
+            position: relative;
+            box-shadow: 0 0 40px rgba(0, 255, 76, 0.15);
+            background: rgba(7, 9, 12, 0.8);
+        }
+
+        .live-battery-head {
+            width: 50px;
+            height: 12px;
+            background: var(--dark-green-border);
+            border-radius: 6px 6px 0 0;
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .live-battery-liquid {
+            width: 100%;
+            height: 52%;
+            background: linear-gradient(180deg, var(--evcse-green) 0%, #00B335 100%);
+            border-radius: 26px;
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            right: 8px;
+            width: calc(100% - 16px);
+            box-shadow: 0 0 24px var(--evcse-green-glow);
+            transition: height 0.5s ease;
+            overflow: hidden;
+        }
+
+        .wave-animation {
+            position: absolute;
+            top: -10px;
+            left: 0;
+            width: 200%;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 40%;
+            animation: wave 4s infinite linear;
+        }
+
+        @keyframes wave {
+            0% {
+                transform: translateX(0) rotate(0deg);
+            }
+
+            100% {
+                transform: translateX(-50%) rotate(360deg);
+            }
+        }
+
+        .live-metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .metric-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            padding: 14px;
+        }
+
+        .metric-val {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--white);
+            margin-top: 4px;
+        }
+
+        .metric-val span {
+            font-size: 12px;
+            color: var(--evcse-green);
+            font-weight: 600;
+        }
+
+        /* SCREEN 12: FINISH SUMMARY */
+        .finish-hero-check {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: rgba(0, 255, 76, 0.15);
+            border: 2px solid var(--evcse-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px auto 20px auto;
+            box-shadow: 0 0 30px var(--evcse-green-glow);
+        }
+
+        .receipt-line {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+            font-size: 13px;
+        }
+
+        /* SCREEN 13: WALLET */
+        .payment-card-visual {
+            background: linear-gradient(135deg, #1C242F 0%, #0E141C 100%);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 14px;
+            position: relative;
+        }
+
+        .payment-card-visual.active {
+            border-color: var(--evcse-green);
+            box-shadow: 0 0 20px rgba(0, 255, 76, 0.1);
+        }
+
+        /* SCREEN 14: HISTORY */
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        /* SCREEN 15: BENEFITS */
+        .points-banner {
+            background: linear-gradient(135deg, var(--dark-green) 0%, rgba(0, 0, 0, 0.8) 100%);
+            border: 1px solid var(--dark-green-border);
+            border-radius: var(--radius-xl);
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* SCREEN 16: SUPPORT CHAT */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            height: 380px;
+            overflow-y: auto;
+            margin-bottom: 16px;
+            padding-right: 4px;
+        }
+
+        .chat-bubble {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .chat-bubble.bot {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-bubble.user {
+            background: var(--dark-green);
+            border: 1px solid var(--dark-green-border);
+            color: var(--evcse-green);
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        /* SCREEN 17: PROFILE */
+        .profile-avatar-large {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--dark-green);
+            border: 2px solid var(--evcse-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--evcse-green);
+            margin: 0 auto 12px auto;
+        }
+
+        /* Toast Notification Overlay */
+        .toast-notification {
+            position: absolute;
+            top: 60px;
+            left: 20px;
+            right: 20px;
+            background: rgba(17, 22, 29, 0.95);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--evcse-green);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 99999;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            transform: translateY(-100px);
+            opacity: 0;
+            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .toast-notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Simulator Top Controls Bar -->
+    <div class="simulator-control-bar">
+        <span style="font-size: 11px; font-weight:700; color: var(--evcse-green);">EVCSE PROTOTYPE</span>
+        <button class="sim-btn active" id="btn-mode-phone" onclick="setDeviceMode('phone')">📱 iPhone 15</button>
+        <button class="sim-btn" id="btn-mode-full" onclick="setDeviceMode('full')">🖥️ Vista Completa</button>
+    </div>
+
+    <!-- Device Container Frame -->
+    <div class="device-container" id="device-frame">
+
+        <!-- Status Bar & Dynamic Island -->
+        <div class="status-bar">
+            <span>09:41</span>
+            <div class="dynamic-island">
+                <div class="dynamic-island-indicator"></div>
+                <span style="font-size: 9px; color: var(--evcse-green); font-weight:700;">EVCSE ACTIVE</span>
+            </div>
+            <div class="status-bar-icons">
+                <span>5G</span>
+                <svg width="18" height="12" viewBox="0 0 24 14" fill="currentColor">
+                    <rect x="0" y="0" width="20" height="14" rx="3" fill="none" stroke="currentColor"
+                        stroke-width="2" />
+                    <rect x="2" y="2" width="12" height="10" rx="1.5" />
+                    <path d="M22 4v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- App Viewport -->
+        <div class="app-viewport">
+
+            <!-- Toast Notification Container -->
+            <div class="toast-notification" id="app-toast">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--evcse-green)"
+                    stroke-width="2">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                </svg>
+                <div style="flex: 1;">
+                    <div id="toast-title" style="font-size: 12px; font-weight: 700; color: #fff;">EVCSE Notificación
+                    </div>
+                    <div id="toast-body" style="font-size: 11px; color: var(--gray-muted);">Dispensador cargador
+                        preparado.</div>
+                </div>
+            </div>
+
+            <!-- ==========================================
+           SCREEN 1: SPLASH SCREEN
+           ========================================== -->
+            <div class="screen active has-no-nav" id="screen-1">
+                <div class="splash-logo-container" style="margin: auto;">
+                    <div class="splash-glow-ring"></div>
+                    <!-- EVCSE Crest Icon -->
+                    <svg class="brand-logo-svg" viewBox="0 0 80 80" fill="none">
+                        <polygon points="40,5 70,22 70,58 40,75 10,58 10,22" stroke="var(--evcse-green)"
+                            stroke-width="3" fill="rgba(0, 255, 76, 0.08)" />
+                        <path d="M44 18L26 42H40L36 62L54 38H40L44 18Z" fill="var(--evcse-green)" />
+                    </svg>
+                    <div class="splash-title">EVC<span>SE</span></div>
+                    <div class="splash-tagline">Energía para moverte</div>
+                </div>
+            </div>
+
+            <!-- ==========================================
+           SCREEN 2: ONBOARDING (4 Slides)
+           ========================================== -->
+            <div class="screen has-no-nav" id="screen-2">
+                <div class="onboarding-slider">
+
+                    <div class="onboarding-slide active" id="slide-1">
+                        <div class="onboarding-illustration">
+                            <svg width="90" height="90" viewBox="0 0 24 24" fill="none" stroke="var(--evcse-green)"
+                                stroke-width="1.8">
+                                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                            </svg>
+                        </div>
+                        <div class="onboarding-h1">Carga con <span>certeza</span></div>
+                        <div class="onboarding-desc">Experiencia energética premium con infraestructura ultra rápida
+                            verificada en tiempo real.</div>
+                    </div>
+
+                    <div class="onboarding-slide" id="slide-2">
+                        <div class="onboarding-illustration">
+                            <svg width="90" height="90" viewBox="0 0 24 24" fill="none" stroke="var(--evcse-green)"
+                                stroke-width="1.8">
+                                <line x1="12" y1="1" x2="12" y2="23" />
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                            </svg>
+                        </div>
+                        <div class="onboarding-h1">Sabe cuánto pagarás <span>antes de conectar</span></div>
+                        <div class="onboarding-desc">Tarifas transparentes por kWh sin cobros ocultos ni sorpresas en tu
+                            billetera digital.</div>
+                    </div>
+
+                    <div class="onboarding-slide" id="slide-3">
+                        <div class="onboarding-illustration">
+                            <svg width="90" height="90" viewBox="0 0 24 24" fill="none" stroke="var(--evcse-green)"
+                                stroke-width="1.8">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                <polyline points="22 4 12 14.01 9 11.01" />
+                            </svg>
+                        </div>
+                        <div class="onboarding-h1">Disponibilidad <span>verificada</span></div>
+                        <div class="onboarding-desc">Reserva tu turno o usa la fila virtual sin perder tiempo en la
+                            estación de carga.</div>
+                    </div>
+
+                    <div class="onboarding-slide" id="slide-4">
+                        <div class="onboarding-illustration">
+                            <svg width="90" height="90" viewBox="0 0 24 24" fill="none" stroke="var(--evcse-green)"
+                                stroke-width="1.8">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                            </svg>
+                        </div>
+                        <div class="onboarding-h1">Soporte cuando <span>más lo necesitas</span></div>
+                        <div class="onboarding-desc">Asistencia remota IA 24/7 y atención directa en cada centro de
+                            experiencia.</div>
+                    </div>
+
+                </div>
+
+                <div>
+                    <div class="dots-container">
+                        <div class="dot active" id="dot-1"></div>
+                        <div class="dot" id="dot-2"></div>
+                        <div class="dot" id="dot-3"></div>
+                        <div class="dot" id="dot-4"></div>
+                    </div>
+                    <button class="btn-primary" onclick="nextOnboardingSlide()">Comenzar</button>
+                </div>
+            </div>
+
+            <!-- ==========================================
+           SCREEN 3: LOGIN
+           ========================================== -->
+            <div class="screen has-no-nav" id="screen-3">
+                <div>
+                    <div class="login-brand-header">
+                        <svg width="48" height="48" viewBox="0 0 80 80" fill="none">
+                            <polygon points="40,5 70,22 70,58 40,75 10,58 10,22" stroke="var(--evcse-green)"
+                                stroke-width="3" fill="rgba(0, 255, 76, 0.08)" />
+                            <path d="M44 18L26 42H40L36 62L54 38H40L44 18Z" fill="var(--evcse-green)" />
+                        </svg>
+                        <h2 style="font-size: 22px; margin-top: 10px;">Acceso EVCSE</h2>
+                        <p style="font-size: 13px; color: var(--gray-muted);">Ingresa a tu experiencia energética</p>
+                    </div>
+
+                    <div class="sso-list">
+                        <button class="btn-sso" onclick="navigateToScreen(4)">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.761H12.545z" />
+                            </svg>
+                            Continuar con Google
+                        </button>
+                        <button class="btn-sso" onclick="navigateToScreen(4)">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.85c.66-.8 1.11-1.92.99-3.04-0.96.04-2.12.64-2.81 1.44-.61.71-1.15 1.86-.99 2.96 1.07.08 2.15-.56 2.81-1.36z" />
+                            </svg>
+                            Continuar con Apple
+                        </button>
+                        <button class="btn-sso" onclick="navigateToScreen(4)">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M11.4 24H0V12.6h11.4V24zM24 24H12.6V12.6H24V24zM11.4 11.4H0V0h11.4v11.4zM24 11.4H12.6V0H24v11.4z" />
+                            </svg>
+                            Continuar con Microsoft
+                        </button>
+                    </div>
+
+                    <div class="divider">o accede con correo</div>
+
+                    <input type="email" class="input-field" placeholder="correo@ejemplo.com"
+                        value="carlos.mendoza@evcse.com">
+                    <input type="password" class="input-field" placeholder="Contraseña" value="••••••••••••">
+                </div>
+
+                <button class="btn-primary" onclick="navigateToScreen(4)">Iniciar Sesión</button>
+            </div>
+
+            <!-- ==========================================
+           SCREEN 4: HOME DASHBOARD
+           ========================================== -->
+            <div class="screen container-padding" id="screen-4">
+
+                <!-- User Header -->
+                <div class="user-greeting">
+                    <div>
+                        <div style="font-size: 12px; color: var(--gray-muted);">Bienvenido de nuevo</div>
+                        <div style="font-size: 20px; font-weight: 800;">Hola, Carlos</div>
+                    </div>
+                    <div class="user-avatar" onclick="navigateToScreen(17)">CM</div>
+                </div>
+
+                <!-- Vehicle Status Card -->
+                <div class="vehicle-card" onclick="navigateToScreen(17)">
+                    <div class="badge-green" style="position: absolute; top: 20px; right: 20px;">
+                        <div class="badge-dot"></div> Conectado vía API
+                    </div>
+                    <div class="vehicle-top-info">
+                        <div>
+                            <div class="vehicle-name">BYD Han EV</div>
+                            <div class="vehicle-sub">Batería Blade 85.4 kWh</div>
+                        </div>
+                    </div>
+
+                    <div class="battery-ring-container">
+                        <!-- Dynamic Battery Icon -->
+                        <svg width="56" height="56" viewBox="0 0 36 36">
+                            <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                fill="none" stroke="var(--gray-dark)" stroke-width="3.5" />
+                            <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                fill="none" stroke="var(--evcse-green)" stroke-width="3.5" stroke-dasharray="52, 100"
+                                stroke-linecap="round" />
+                        </svg>
+                        <div>
+                            <div class="soc-large">52<span>%</span></div>
+                            <div class="autonomy-pill">⚡ 281 km autonomía rest.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommended Station Card -->
+                <div class="section-header">
+                    <div class="section-title">Estación Recomendada</div>
+                    <div class="see-all-link" onclick="navigateToScreen(5)">Ver mapa</div>
+                </div>
+
+                <div class="card card-glass" onclick="navigateToScreen(6)">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                        <div>
+                            <div class="badge-green" style="margin-bottom: 6px;">
+                                <div class="badge-dot"></div> 4/8 Disponibles
+                            </div>
+                            <h3 style="font-size: 16px; font-weight:700;">EVCSE Barranquilla Norte</h3>
+                            <p style="font-size: 12px; color: var(--gray-muted);">Cra 53 #106-25 · Alto Prado</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="font-size: 14px; font-weight: 800; color: var(--evcse-green);">240 kW</span>
+                            <div style="font-size: 10px; color: var(--gray-muted);">DC Ultra-Fast</div>
+                        </div>
+                    </div>
+
+                    <div
+                        style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border-glass);">
+                        <div>
+                            <div style="font-size: 10px; color: var(--gray-muted);">Confiabilidad</div>
+                            <div style="font-size: 13px; font-weight:700; color: var(--white);">⭐ 98%</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 10px; color: var(--gray-muted);">Precio est.</div>
+                            <div style="font-size: 13px; font-weight:700; color: var(--white);">$42.500</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 10px; color: var(--gray-muted);">Tiempo est.</div>
+                            <div style="font-size: 13px; font-weight:700; color: var(--evcse-green);">34 min</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Access Actions -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px;">
+                    <div class="card" onclick="navigateToScreen(8)"
+                        style="display:flex; align-items:center; gap:12px; margin-bottom:0;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--evcse-green)"
+                            stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                            <line x1="16" y1="2" x2="16" y2="6" />
+                            <line x1="8" y1="2" x2="8" y2="6" />
+                            <line x1="3" y1="10" x2="21" y2="10" />
+                        </svg>
+                        <div>
+                            <div style="font-size: 13px; font-weight: 700;">Reservar Turno</div>
+                            <div style="font-size: 10px; color: var(--gray-muted);">Agenda slot VIP</div>
+                        </div>
+                    </div>
+                    <div class="card" onclick="navigateToScreen(9)"
+                        style="display:flex; align-items:center; gap:12px; margin-bottom:0;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--evcse-green)"
+                            stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
+                        <div>
+                            <div style="font-size: 13px; font-weight: 700;">Fila Virtual</div>
+                            <div style="font-size: 10px; color: var(--gray-muted);">Puesto #2 activo</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ==========================================
+           SCREEN 5: MAPA INTELIGENTE
+           ========================================== -->
+            <div class="screen" id="screen-5">
+                <div class="map-container-view">
+
+                    <!-- Filter Pills -->
+                    <div class="map-filter-pills">
+                        <div class="filter-pill active">🟢 Disponibilidad</div>
+                        <div class="filter-pill">⚡ Potencia (240kW)</div>
+                        <div class="filter-pill">💲 Precio ($/kWh)</div>
+                        <div class="filter-pill">⭐ Confiabilidad (95%+)</div>
+                    </div>
+
+                    <!-- SVG Simulated Interactive Dark Map -->
+                    <svg class="map-svg-canvas" viewBox="0 0 400 600">
+                        <!-- Road Networks -->
+                        <path d="M-50 150 Q 150 120 450 200" stroke="#1C2733" stroke-width="12" fill="none" />
+                        <path d="M200 -50 L 200 650" stroke="#1C2733" stroke-width="18" fill="none" />
+                        <path d="M50 450 Q 250 350 450 480" stroke="#151E28" stroke-width="10" fill="none" />
+
+                        <!-- Map Grid Accents -->
+                        <circle cx="200" cy="250" r="180" stroke="rgba(0,255,76,0.05)" stroke-width="1" fill="none" />
+                        <circle cx="200" cy="250" r="90" stroke="rgba(0,255,76,0.08)" stroke-width="1" fill="none" />
+                    </svg>
+
+                    <!-- Clickable Station Markers -->
+                    <!-- Station 1: Barranquilla Norte -->
+                    <div class="station-marker-pin" style="top: 220px; left: 190px;" onclick="navigateToScreen(6)">
+                        <div class="marker-box">
+                            <span style="color: var(--evcse-green);">⚡</span> Barranquilla (4/8)
+                        </div>
+                    </div>
+
+                    <!-- Station 2: Cartagena Centro -->
+                    <div class="station-marker-pin" style="top: 360px; left: 110px;" onclick="navigateToScreen(6)">
+                        <div class="marker-box" style="border-color: rgba(255,255,255,0.2);">
+                            <span style="color: var(--evcse-green);">⚡</span> Cartagena (2/6)
+                        </div>
+                    </div>
+
+                    <!-- Station 3: Santa Marta -->
+                    <div class="station-marker-pin" style="top: 140px; left: 290px;" onclick="navigateToScreen(6)">
+                        <div class="marker-box" style="border-color: rgba(255,255,255,0.2);">
+                            <span style="color: var(--evcse-green);">⚡</span> Santa Marta (6/8)
+                        </div>
+                    </div>
+
+                    <!-- Station 4: Bogotá Norte -->
+                    <div class="station-marker-pin" style="top: 450px; left: 260px;" onclick="navigateToScreen(6)">
+                        <div class="marker-box" style="border-color: rgba(255,255,255,0.2);">
+                            <span style="color: var(--evcse-green);">⚡</span> Bogotá (8/12)
+                        </div>
+                    </div>
+
+                    <!-- Bottom Sheet Map Station Peek -->
+                    <div class="map-bottom-sheet">
+                        <div
+                            style="width: 40px; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; margin: 0 auto 14px auto;">
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-size: 16px; font-weight: 700;">EVCSE Barranquilla Norte</div>
+                                <div style="font-size: 11px; color: var(--gray-muted);">4 Conectores CCS2 Ultra-Rápidos
+                                    listos</div>
+                            </div>
+                            <button class="btn-primary"
+                                style="width: auto; height: 38px; padding: 0 16px; font-size: 12px;"
+                                onclick="navigateToScreen(6)">Ver Detalle</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ==========================================
+           SCREEN 6: DETALLE DE ESTACIÓN
+           ========================================== -->
+            <div class="screen container-padding" id="screen-6">
+                <div class="header-bar">
+                    <div class="back-btn" onclick="navigateToScreen(4)">←</div>
+                    <div class="screen-title">Detalle de Estación</div>
+                    <div></div>
+                </div>
+
+                <div class="station-hero-img">
+                    <div>
+                        <div class="badge-green" style="background: rgba(0,0,0,0.7);">98% Índice Confiabilidad</div>
+                        <h2 style="font-size: 22px; font-weight:800; margin-top: 4px;">EVCSE Barranquilla Norte</h2>
+                    </div>
+                </div>
+
+                <div
+                    style="display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 12px; color: var(--gray-muted);">
+                    <span>📍 Cra 53 #106-25, Barranquilla</span>
+                    <span style="color: var(--evcse-green);">● Abierto 24/7</span>
+                </div>
+
+                <!-- Services & Amenities -->
+                <div style="font-size: 13px; font-weight:700; margin-bottom: 8px;">Servicios & Lounge EVCSE</div>
+                <div class="services-grid">
+                    <div class="service-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                            <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
+                            <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
+                        </svg>
+                        Cafetería
+                    </div>
+                    <div class="service-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                            <line x1="8" y1="21" x2="16" y2="21" />
+                        </svg>
+                        Coworking
+                    </div>
+                    <div class="service-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                            <path d="M5 12.55a11 11 0 0 1 14.08 0" />
+                            <path d="M1.42 9a16 16 0 0 1 21.16 0" />
+                            <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+                            <line x1="12" y1="20" x2="12.01" y2="20" />
+                        </svg>
+                        Wi-Fi 6
+                    </div>
+                    <div class="service-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg>
+                        VIP Lounge
+                    </div>
+                </div>
+
+                <!-- Connectors Status -->
+                <div style="font-size: 13px; font-weight:700; margin: 16px 0 8px 0;">Dispensadores Disponibles</div>
+
+                <div class="card"
+                    style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <div>
+                        <div style="font-weight:700; font-size:14px;">CCS2 Combo Ultra Fast</div>
+                        <div style="font-size:11px; color:var(--gray-muted);">Dispensador #01 · 240 kW DC</div>
+                    </div>
+                    <div class="badge-green">Disponible</div>
+                </div>
+
+                <div class="card"
+                    style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <div>
+                        <div style="font-weight:700; font-size:14px;">GB/T High Power DC</div>
+                        <div style="font-size:11px; color:var(--gray-muted);">Dispensador #02 · 180 kW DC</div>
+                    </div>
+                    <div class="badge-green">Disponible</div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div style="display:flex; gap:10px; margin-top:20px;">
+                    <button class="btn-secondary" onclick="navigateToScreen(7)">Compatibilidad</button>
+                    <button class="btn-primary" onclick="navigateToScreen(10)">Cargar Ahora</button>
+                </div>
+            </div>
+
+            <!-- ==========================================
+           SCREEN 7: COMPATIBILIDAD
+           ========================================== -->
+            <div class="screen container-padding" id="screen-7">
+                <div class="header-bar">
+                    <div class="back-btn" onclick="navigateToScreen(6)">←</div>
+                    <div class="screen-title">Verificación Compatibilidad</div>
+                    <div></div>
+                </div>
+
+                <div class="comp-vs-container">
+                    <div class="comp-box">
+                        <div style="font-size: 24px; margin-bottom: 6px;">🏎️</div>
+                        <div style="font-weight: 700; font-size: 13px;">BYD Han EV</div>
+                        <div style="font-size: 10px; color: var(--gray-muted);">CCS2 Direct Port</div>
+                    </div>
+                    <div class="comp-vs-badge">VS</div>
+                    <div class="comp-box">
+                        <div style="font-size: 24px; margin-bottom: 6px;">🔌</div>
+                        <div style="font-weight: 700; font-size: 13px;">Conector DC #01</div>
+                        <div style="font-size: 10px; color: var(--gray-muted);">CCS2 240 kW</div>
+                    </div>
+                </div>
+
+                <div class="card card-glass" style="text-align: center; padding: 24px;">
+                    <div
+                        style="width: 50px; height: 50px; border-radius: 50%; background: var(--dark-green); border: 2px solid var(--evcse-green); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto; font-size: 20px; color: var(--evcse-green);">
+                        ✓
+                    </div>
+                    <h2 style="font-size: 20px; font-weight: 800; color: var(--evcse-green);">Totalmente Compatible ✅
+                    </h2>
+                    <p style="font-size: 12px; color: var(--gray-muted); margin-top: 6px;">El protocolo OCPP 2.0.1 y la
+                        curva BMS de tu BYD Han aprovechan la potencia completa de 240 kW.</p>
+                </div>
+
+                <div class="card">
+                    <div style="font-size: 13px; font-weight: 700; margin-bottom: 12px;">Estimación de Curva de Carga
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 8px;">
+                        <span style="color: var(--gray-muted);">Potencia Máxima Pico:</span>
+                        <span style="font-weight: 700;">240 kW DC</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 8px;">
+                        <span style="color: var(--gray-muted);">Tiempo estimado 52% → 80%:</span>
+                        <span style="font-weight: 700; color: var(--evcse-green);">14 min</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 12px;">
+                        <span style="color: var(--gray-muted);">Tiempo estimado 52% → 100%:</span>
+                        <span style="font-weight: 700;">34 min</span>
+                    </div>
+                </div>
+
+                <button class="btn-primary" onclick="navigateToScreen(10)">Iniciar Sesión de Carga</button>
+            </div>
+
+            <!-- ==========================================
+           SCREEN 8: RESERVA DE TURNO
+           ========================================== -->
+            <div class="screen container-padding" id="screen-8">
+                <div class="header-bar">
+                    <div class="back-btn" onclick="navigateToScreen(4)">←</div>
+                    <div class="screen-title">Reserva de Turno VIP</div>
+                    <div></div>
+                </div>
+
+                <div style="font-size: 13px; font-weight:700;">Selecciona Fecha</div>
+                <div class="calendar-strip">
+                    <div class="date-card active">
+                        <span style="font-size: 10px;">Hoy</span>
+                        <span style="font-size: 18px; font-weight:800;">23</span>
+                        <span style="font-size: 10px;">Sep</span>
+                    </div>
+                    <div class="date-card">
+                        <span style="font-size: 10px;">Jue</span>
+                        <span style="font-size: 18px; font-weight:800;">24</span>
+                        <span style="font-size: 10px;">Sep</span>
+                    </div>
+                    <div class="date-card">
+                        <span style="font-size: 10px;">Vie</span>
+                        <span style="font-size: 18px; font-weight:800;">25</span>
+                        <span style="font-size: 10px;">Sep</span>
+                    </div>
+                    <div class="date-card">
+                        <span style="font-size: 10px;">Sáb</span>
+                        <span style="font-size: 18px; font-weight:800;">26</span>
+                        <span style="font-size: 10px;">Sep</span>
+                    </div>
+                </div>
+
+                <div style="font-size: 13px; font-weight:700; margin-top: 14px;">Slots Disponibles (240 kW)</div>
+                <div class="slots-grid">
+                    <div class="slot-btn selected">10:00 AM</div>
+                    <div class="slot-btn">10:45 AM</div>
+                    <div class="slot-btn disabled">11:30 AM</div>
+                    <div class="slot-btn">01:15 PM</div>
+                    <div class="slot-btn">02:00 PM</div>
+                    <div class="slot-btn">03:30 PM</div>
+                </div>
+
+                <div class="card" style="margin-top: 24px;">
+                    <div style="font-size: 13px; font-weight: 700; margin-bottom: 8px;">Garantía de Reserva</div>
+                    <p style="font-size: 11px; color: var(--gray-muted);">Se retendrá una pre-autorización de $10.000
+                        COP que se abonará al total de tu consumo final.</p>
+                </div>
+
+                <button class="btn-primary"
+                    onclick="triggerToast('Reserva Confirmada', 'Tu slot de 10:00 AM ha sido bloqueado.'); navigateToScreen(4)">Confirmar
+                    Reserva</button>
+            </div>
+
+            <!-- ==========================================
+           SCREEN 9: FILA VIRTUAL
+           ========================================== -->
+            <div class="screen container-padding" id="screen-9">
+                <div class="header-bar">
+                    <div class="back-btn" onclick="navigateToScreen(4)">←</div>
+                    <div class="screen-title">Fila Virtual Inteligente</div>
+                    <div></div>
+                </div>
+
+                <div class="queue-ring-large">
+                    <svg class="queue-ring-svg">
+                        <circle class="queue-ring-bg" cx="100" cy="100" r="90" />
+                        <circle class="queue-ring-fill" cx="100" cy="100" r="90" />
+                    </svg>
+                    <div class="queue-center-content">
+                        <div style="font-size: 12px; color: var(--gray-muted);">Tu posición</div>
+                        <div style="font-size: 42px; font-weight: 800; color: var(--evcse-green);">#2</div>
+                        <div style="font-size: 11px; color: var(--white);">en la fila</div>
+                    </div>
+                </div>
+
+                <div class="card card-glass" style="text-align: center;">
+                    <div style="font-size: 12px; color: var(--gray-muted);">Tiempo Estimado de Espera</div>
+                    <div style="font-size: 26px; font-weight: 800; color: var(--white); margin: 4px 0;">08:45 min</div>
+                    <p style="font-size: 11px; color: var(--gray-muted);">Estación: EVCSE Barranquilla Norte</p>
+                </div>
+
+                <button class="btn-secondary"
+                    onclick="triggerToast('Notificación Activada', 'Te avisaremos cuando el cargador esté libre.'); navigateToScreen(4)">Avisarme
+                    por Notificación</button>
+            </div>
+
+            <!-- ==========================================
+           SCREEN 10: INICIO DE CARGA (RESUMEN PRE-CARGA)
+           ========================================== -->
+            <div class="screen container-padding" id="screen-10">
+                <div class="header-bar">
+                    <div class="back-btn" onclick="navigateToScreen(6)">←</div>
+                    <div class="screen-title">Resumen de Carga</div>
+                    <div></div>
+                </div>
+
+                <div class="card card-glass">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+                        <span style="color:var(--gray-muted); font-size:12px;">Vehículo:</span>
+                        <span style="font-weight:700; font-size:13px;">BYD Han EV</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+                        <span style="color:var(--gray-muted); font-size:12px;">Estación:</span>
+                        <span style="font-weight:700; font-size:13px;">Barranquilla Norte (#01)</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+                        <span style="color:var(--gray-muted); font-size:12px;">Potencia Máx:</span>
+                        <span style="font-weight:700; font-size:13px; color:var(--evcse-green);">240 kW DC</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between;">
+                        <span style="color:var(--gray-muted); font-size:12px;">Tarifa por kWh:</span>
+                        <span style="font-weight:700; font-size:13px;">$940 COP / kWh</span>
+                    </div>
+                </div>
+
+                <div class="charge-slider-container card">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:13px;">
+                        <span>Límite de Batería:</span>
+                        <span style="font-weight:800; color:var(--evcse-green);" id="charge-limit-val">80%
+                            (Recomendado)</span>
+                    </div>
+                    <input type="range" class="range-input-custom" min="50" max="100" value="80"
+                        oninput="document.getElementById('charge-limit-val').innerText = this.value + '%'">
+                </div>
+
+                <button class="btn-primary" onclick="startChargingSession()" style="margin-top: 20px;">⚡ Deslizar para
+                    Iniciar Carga</button>
+            </div>
+
+            <!-- ==========================================
+           SCREEN 11: CARGA EN CURSO (TELEMETRÍA OCPP REAL-TIME)
+           ========================================== -->
+            <div class="screen container-padding" id="screen-11">
+                <div style="text-align: center; margin-bottom: 10px;">
+                    <div class="badge-green">
+                        <div class="badge-dot"></div> TELEMETRÍA EN VIVO · OCPP 2.0.1
+                    </div>
+                    <h2 style="font-size: 18px; font-weight: 800; margin-top: 6px;">Cargando BYD Han</h2>
+                </div>
+
+                <!-- Animated Battery Liquid Gauge -->
+                <div class="live-battery-visual">
+                    <div class="live-battery-head"></div>
+                    <div class="live-battery-liquid" id="battery-liquid-fill">
+                        <div class="wave-animation"></div>
+                    </div>
+                    <div
+                        style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; z-index: 5;">
+                        <div style="font-size: 38px; font-weight: 800; color: var(--white);" id="live-soc-counter">52%
+                        </div>
+                        <div style="font-size: 10px; color: var(--evcse-green); font-weight: 700;">EN PROCESO</div>
+                    </div>
+                </div>
+
+                <!-- Telemetry Metrics Grid -->
+                <div class="live-metrics-grid">
+                    <div class="metric-card">
+                        <div style="font-size: 10px; color: var(--gray-muted);">Energía Entregada</div>
+                        <div class="metric-val" id="live-kwh">0.00 <span>kWh</span></div>
+                    </div>
+                    <div class="metric-card">
+                        <div style="font-size: 10px; color: var(--gray-muted);">Potencia Activa</div>
+                        <div class="metric-val" id="live-kw">238.4 <span>kW</span></div>
+                    </div>
+                    <div class="metric-card">
+                        <div style="font-size: 10px; color: var(--gray-muted);">Tiempo Transcurrido</div>
+                        <div class="metric-val" id="live-time">00:00</div>
+                    </div>
+                    <div class="metric-card">
+                        <div style="font-size: 10px; color: var(--gray-muted);">Costo Acumulado</div>
+                        <div class="metric-val" id="live-cost">$0 <span>COP</span></div>
+                    </div>
+                </div>
+
+                <button class="btn-secondary" style="border-color: #FF4444; color: #FF4444; margin-top: 20px;"
+                    onclick="stopChargingSession()">
+                    🛑 Detener Sesión de Carga
+                </button>
+            </div>
+
+            <!-- ==========================================
+           SCREEN 12: FINALIZACIÓN DE CARGA
+           ========================================== -->
+            <div class="screen container-padding" id="screen-12">
+                <div class="finish-hero-check">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--evcse-green)"
+                        stroke-width="3">
+                        <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                </div>
+
+                <h2 style="text-align: center; font-size: 22px; font-weight: 800;">Carga Completada</h2>
+                <p style="text-align: center; font-size: 12px; color: var(--gray-muted); margin-bottom: 20px;">Sesión
+                    EVCSE #89421-B</p>
+
+                <div class="card card-glass">
+                    <div class="receipt-line">
+                        <span style="color:var(--gray-muted);">Energía Entregada:</span>
+                        <span style="font-weight:700;" id="summary-kwh">45.2 kWh</span>
+                    </div>
+                    <div class="receipt-line">
+                        <span style="color:var(--gray-muted);">Tiempo Total:</span>
+                        <span style="font-weight:700;" id="summary-time">34 min 12s</span>
+                    </div>
+                    <div class="receipt-line">
+                        <span style="color:var(--gray-muted);">Emisiones Evitadas:</span>
+                        <span style="font-weight:700; color:var(--evcse-green);">🌿 18.4 kg CO2e</span>
+                    </div>
+                    <div class="receipt-line" style="border-bottom:none; font-size:16px; margin-top:6px;">
+                        <span style="font-weight:800;">Total Pagado:</span>
+                        <span style="font-weight:800; color:var(--evcse-green);" id="summary-cost">$42.500 COP</span>
+                    </div>
+                </div>
+
+                <button class="btn-primary" onclick="navigateToScreen(4)">Volver a Inicio</button>
+            </div>
+
+            <!-- ==========================================
+           SCREEN 13: BILLETERA
+           ========================================== -->
+            <div class="screen container-padding" id="screen-13">
+                <div class="header-bar">
+                    <div class="back-btn" onclick="navigateToScreen(4)">←</div>
+                    <div class="screen-title">Billetera EVCSE</div>
+                    <div></div>
+                </div>
+
+                <!-- Benefits Balance -->
+                <div class="card card-glass" style="margin-bottom: 20px;">
+                    <div style="font-size: 11px; color: var(--gray-muted);">Saldo de Beneficios & Cupones</div>
+                    <div style="font-size: 28px; font-weight: 800; color: var(--evcse-green); margin-top: 4px;">$15.000
+                        COP</div>
+                </div>
+
+                <div style="font-size: 13px; font-weight:700; margin-bottom: 10px;">Métodos de Pago Registrados</div>
+
+                <div class="payment-card-visual active">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-weight:800; font-size:14px;">Visa Principal</span>
+                        <span style="font-size:11px; color:var(--evcse-green);">● Predeterminado</span>
+                    </div>
+                    <div style="font-size: 16px; letter-spacing: 2px; margin: 16px 0;">•••• •••• •••• 4456</div>
+                    <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--gray-muted);">
+                        <span>Carlos Mendoza</span>
+                        <span>Exp: 12/28</span>
+                    </div>
+                </div>
+
+                <div class="payment-card-visual">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-weight:800; font-size:14px;">Mastercard Corp</span>
+                    </div>
+                    <div style="font-size: 16px; letter-spacing: 2px; margin: 16px 0;">•••• •••• •••• 8765</div>
+                </div>
+
+                <div class="card" style="display:flex; justify-content:space-between; align-items:center;">
+                    <div style="font-weight:700; font-size:13px;">PSE / Nequi / Daviplata</div>
+                    <span style="color:var(--evcse-green); font-size:12px; font-weight:600;">Conectado</span>
+                </div>
+            </div>
+
+            <!-- ==========================================
+           SCREEN 14: HISTORIAL
+           ========================================== -->
+            <div class="screen container-padding" id="screen-14">
+                <div class="header-bar">
+                    <div class="back-btn" onclick="navigateToScreen(4)">←</div>
+                    <div class="screen-title">Historial de Cargas</div>
+                    <div></div>
+                </div>
+
+                <div class="history-item">
+                    <div>
+                        <div style="font-weight:700; font-size:13px;">EVCSE Barranquilla Norte</div>
+                        <div style="font-size:10px; color:var(--gray-muted);">Hoy · 45.2 kWh · 34 min</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div style="font-weight:700; font-size:13px; color:var(--evcse-green);">$42.500</div>
+                        <div style="font-size:9px; color:var(--gray-muted);">Exitoso ✅</div>
+                    </div>
+                </div>
+
+                <div class="history-item">
+                    <div>
+                        <div style="font-weight:700; font-size:13px;">EVCSE Cartagena Centro</div>
+                        <div style="font-size:10px; color:var(--gray-muted);">18 Sep · 32.1 kWh · 25 min</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div style="font-weight:700; font-size:13px; color:var(--evcse-green);">$30.174</div>
+                        <div style="font-size:9px; color:var(--gray-muted);">Exitoso ✅</div>
+                    </div>
+                </div>
+
+                <div class="history-item">
+                    <div>
+                        <div style="font-weight:700; font-size:13px;">EVCSE Santa Marta</div>
+                        <div style="font-size:10px; color:var(--gray-muted);">10 Sep · 50.0 kWh · 38 min</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div style="font-weight:700; font-size:13px; color:var(--evcse-green);">$47.000</div>
+                        <div style="font-size:9px; color:var(--gray-muted);">Exitoso ✅</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==========================================
+           SCREEN 15: BENEFICIOS
+           ========================================== -->
+            <div class="screen container-padding" id="screen-15">
+                <div class="header-bar">
+                    <div class="back-btn" onclick="navigateToScreen(4)">←</div>
+                    <div class="screen-title">Club de Beneficios</div>
+                    <div></div>
+                </div>
+
+                <div class="points-banner">
+                    <div style="font-size: 11px; color: var(--gray-muted);">Tus Puntos EVCSE</div>
+                    <div style="font-size: 36px; font-weight: 800; color: var(--evcse-green);">1,450 <span>pts</span>
+                    </div>
+                    <div class="badge-green" style="margin-top: 10px;">Nivel Gold Member</div>
+                </div>
+
+                <div class="card">
+                    <div style="font-weight: 700; font-size: 13px;">Cupón $15.000 COP Descuento</div>
+                    <p style="font-size: 11px; color: var(--gray-muted); margin-top: 4px;">Válido en tu próxima carga
+                        ultra rápida mayores a 30 kWh.</p>
+                    <button class="btn-primary" style="height: 38px; font-size: 12px; margin-top: 10px;"
+                        onclick="triggerToast('Cupón Redimido', 'Aplicado a tu saldo de billetera.');">Redimir
+                        Puntos</button>
+                </div>
+            </div>
+
+            <!-- ==========================================
+           SCREEN 16: SOPORTE CHAT IA
+           ========================================== -->
+            <div class="screen container-padding" id="screen-16">
+                <div class="header-bar">
+                    <div class="back-btn" onclick="navigateToScreen(4)">←</div>
+                    <div class="screen-title">Soporte EV Assist 24/7</div>
+                    <div></div>
+                </div>
+
+                <div class="chat-container" id="chat-box">
+                    <div class="chat-bubble bot">Hola Carlos, soy tu asistente EVCSE. ¿En qué puedo ayudarte hoy?</div>
+                </div>
+
+                <div style="display:flex; gap:8px;">
+                    <input type="text" class="input-field" id="chat-input" placeholder="Escribe tu consulta..."
+                        style="margin-bottom:0;" onkeypress="if(event.key==='Enter') sendChatMessage()">
+                    <button class="btn-primary" style="width:52px; height:52px;" onclick="sendChatMessage()">➔</button>
+                </div>
+            </div>
+
+            <!-- ==========================================
+           SCREEN 17: PERFIL
+           ========================================== -->
+            <div class="screen container-padding" id="screen-17">
+                <div class="profile-avatar-large">CM</div>
+                <h2 style="text-align: center; font-size: 18px; font-weight: 800;">Carlos Mendoza</h2>
+                <p style="text-align: center; font-size: 12px; color: var(--gray-muted); margin-bottom: 20px;">
+                    carlos.mendoza@evcse.com</p>
+
+                <div class="card" onclick="navigateToScreen(13)">
+                    <div style="font-weight: 700; font-size: 13px;">💳 Billetera & Métodos de Pago</div>
+                    <div style="font-size: 11px; color: var(--gray-muted);">Visa ****4456 activa</div>
+                </div>
+
+                <div class="card" onclick="navigateToScreen(15)">
+                    <div style="font-weight: 700; font-size: 13px;">🎁 Puntos & Beneficios</div>
+                    <div style="font-size: 11px; color: var(--gray-muted);">1,450 Puntos Gold</div>
+                </div>
+
+                <div class="card" onclick="navigateToScreen(16)">
+                    <div style="font-weight: 700; font-size: 13px;">🎧 Soporte & Ayuda</div>
+                    <div style="font-size: 11px; color: var(--gray-muted);">Chat IA 24/7 disponible</div>
+                </div>
+
+                <button class="btn-secondary" style="border-color: #FF4444; color: #FF4444;"
+                    onclick="navigateToScreen(3)">Cerrar Sesión</button>
+            </div>
+
+        </div>
+
+        <!-- Bottom Navigation Bar -->
+        <div class="bottom-nav hidden" id="main-bottom-nav">
+            <a class="nav-item active" id="nav-item-4" onclick="navigateToScreen(4)">
+                <svg viewBox="0 0 24 24">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                </svg>
+                Inicio
+            </a>
+            <a class="nav-item" id="nav-item-5" onclick="navigateToScreen(5)">
+                <svg viewBox="0 0 24 24">
+                    <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" />
+                    <line x1="8" y1="2" x2="8" y2="18" />
+                    <line x1="16" y1="6" x2="16" y2="22" />
+                </svg>
+                Estaciones
+            </a>
+
+            <!-- Central Charging Action -->
+            <a class="nav-item nav-charge-center" onclick="navigateToScreen(10)">
+                <div class="nav-charge-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                    </svg>
+                </div>
+            </a>
+
+            <a class="nav-item" id="nav-item-14" onclick="navigateToScreen(14)">
+                <svg viewBox="0 0 24 24">
+                    <polyline points="12 8 12 12 14 14" />
+                    <circle cx="12" cy="12" r="10" />
+                </svg>
+                Actividad
+            </a>
+            <a class="nav-item" id="nav-item-17" onclick="navigateToScreen(17)">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                </svg>
+                Cuenta
+            </a>
+        </div>
+
+        <!-- iPhone Home Indicator Bar -->
+        <div class="home-indicator"></div>
+
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // App State Management
+        let currentScreen = 1;
+        let onboardingSlide = 1;
+        let telemetryInterval = null;
+        let liveKwh = 0.0;
+        let liveSoc = 52;
+        let liveSeconds = 0;
+
+        // Auto Transition from Splash (Screen 1) to Onboarding (Screen 2) after 2.2s
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                if (currentScreen === 1) {
+                    navigateToScreen(2);
+                }
+            }, 2200);
+        });
+
+        // Device Mode Switcher (Phone Frame vs Full Screen)
+        function setDeviceMode(mode) {
+            const frame = document.getElementById('device-frame');
+            const btnPhone = document.getElementById('btn-mode-phone');
+            const btnFull = document.getElementById('btn-mode-full');
+
+            if (mode === 'full') {
+                frame.classList.add('full-screen-mode');
+                btnFull.classList.add('active');
+                btnPhone.classList.remove('active');
+            } else {
+                frame.classList.remove('full-screen-mode');
+                btnPhone.classList.add('active');
+                btnFull.classList.remove('active');
+            }
+        }
+
+        // Screen Router
+        function navigateToScreen(screenNum) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+
+            // Target Screen
+            const target = document.getElementById(`screen-${screenNum}`);
+            if (target) {
+                target.classList.add('active');
+                currentScreen = screenNum;
+            }
+
+            // Bottom Nav Visibility Rule
+            const bottomNav = document.getElementById('main-bottom-nav');
+            if (screenNum >= 4 && screenNum !== 11 && screenNum !== 12) {
+                bottomNav.classList.remove('hidden');
+            } else {
+                bottomNav.classList.add('hidden');
+            }
+
+            // Sync active tab icon
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            const activeNav = document.getElementById(`nav-item-${screenNum}`);
+            if (activeNav) activeNav.classList.add('active');
+        }
+
+        // Onboarding Carousel
+        function nextOnboardingSlide() {
+            onboardingSlide++;
+            if (onboardingSlide > 4) {
+                navigateToScreen(3); // Go to Login
+                return;
+            }
+
+            document.querySelectorAll('.onboarding-slide').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.dot').forEach(d => d.classList.remove('active'));
+
+            document.getElementById(`slide-${onboardingSlide}`).classList.add('active');
+            document.getElementById(`dot-${onboardingSlide}`).classList.add('active');
+        }
+
+        // Toast Notification System
+        function triggerToast(title, message) {
+            const toast = document.getElementById('app-toast');
+            document.getElementById('toast-title').innerText = title;
+            document.getElementById('toast-body').innerText = message;
+
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3500);
+        }
+
+        // Telemetry Charging Simulation Engine
+        function startChargingSession() {
+            navigateToScreen(11);
+            liveKwh = 0.0;
+            liveSoc = 52;
+            liveSeconds = 0;
+
+            if (telemetryInterval) clearInterval(telemetryInterval);
+
+            telemetryInterval = setInterval(() => {
+                liveSeconds += 1;
+                liveKwh += 0.06;
+                if (liveSeconds % 4 === 0 && liveSoc < 100) {
+                    liveSoc += 1;
+                }
+
+                // Format values
+                const kwPower = (238.0 + (Math.random() * 4 - 2)).toFixed(1);
+                const costCop = Math.round(liveKwh * 940);
+                const mins = String(Math.floor(liveSeconds / 60)).padStart(2, '0');
+                const secs = String(liveSeconds % 60).padStart(2, '0');
+
+                // Update DOM
+                document.getElementById('live-soc-counter').innerText = `${liveSoc}%`;
+                document.getElementById('battery-liquid-fill').style.height = `${liveSoc}%`;
+                document.getElementById('live-kwh').innerHTML = `${liveKwh.toFixed(2)} <span>kWh</span>`;
+                document.getElementById('live-kw').innerHTML = `${kwPower} <span>kW</span>`;
+                document.getElementById('live-time').innerText = `${mins}:${secs}`;
+                document.getElementById('live-cost').innerHTML = `$${costCop.toLocaleString('es-CO')} <span>COP</span>`;
+            }, 1000);
+        }
+
+        function stopChargingSession() {
+            if (telemetryInterval) clearInterval(telemetryInterval);
+
+            // Populate finish summary screen
+            document.getElementById('summary-kwh').innerText = `${liveKwh.toFixed(1)} kWh`;
+            const mins = Math.floor(liveSeconds / 60);
+            const secs = liveSeconds % 60;
+            document.getElementById('summary-time').innerText = `${mins} min ${secs}s`;
+            const finalCost = Math.round(liveKwh * 940);
+            document.getElementById('summary-cost').innerText = `$${finalCost.toLocaleString('es-CO')} COP`;
+
+            navigateToScreen(12);
+        }
+
+        // AI Support Chat Bot
+        function sendChatMessage() {
+            const input = document.getElementById('chat-input');
+            const val = input.value.trim();
+            if (!val) return;
+
+            const chatBox = document.getElementById('chat-box');
+
+            // Append user bubble
+            const userBubble = document.createElement('div');
+            userBubble.className = 'chat-bubble user';
+            userBubble.innerText = val;
+            chatBox.appendChild(userBubble);
+            input.value = '';
+
+            // Simulated AI Bot response
+            setTimeout(() => {
+                const botBubble = document.createElement('div');
+                botBubble.className = 'chat-bubble bot';
+                botBubble.innerText = "He verificado la telemetría de tu BYD Han y la estación Barranquilla Norte. Todos los dispensadores operan con potencia óptima de 240 kW. ¿Deseas reservar un turno prioritario?";
+                chatBox.appendChild(botBubble);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 900);
+
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    </script>
+</body>
+
+</html>
