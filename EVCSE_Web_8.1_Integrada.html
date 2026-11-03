@@ -2757,18 +2757,50 @@
       font-weight: 700;
     }
 
-    /* 08. PORTAFOLIO DE CARGADORES */
+    /* 08. PORTAFOLIO DE CARGADORES REORGANIZADO */
+    .equipment-filter-bar {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 24px auto 0;
+      max-width: 780px;
+    }
+    .equip-filter-btn {
+      background: rgba(6, 61, 46, 0.35);
+      border: 1px solid var(--border-subtle);
+      color: var(--silver);
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 8px 18px;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      font-family: inherit;
+    }
+    .equip-filter-btn:hover {
+      border-color: rgba(0, 255, 77, 0.4);
+      color: var(--evcse-cloud);
+      background: rgba(6, 61, 46, 0.65);
+    }
+    .equip-filter-btn.active {
+      background: var(--energy-green);
+      color: var(--evcse-deep);
+      border-color: var(--energy-green);
+      font-weight: 700;
+      box-shadow: 0 0 16px rgba(0, 255, 77, 0.3);
+    }
     .equipment-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 24px;
-      margin-top: 36px;
+      margin-top: 32px;
     }
     .equipment-card {
       background: var(--bg-surface-card);
       border: 1px solid var(--border-subtle);
       border-radius: 20px;
-      padding: 28px 22px;
+      padding: 26px 22px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -2785,7 +2817,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
     .equip-badge-power {
       display: inline-block;
@@ -2798,48 +2830,59 @@
       color: var(--energy-green);
     }
     .equip-type-tag {
-      font-size: 0.75rem;
+      font-size: 0.74rem;
       color: var(--silver);
       font-weight: 600;
     }
     .equipment-name {
       font-family: 'Sora', sans-serif;
-      font-size: 1.4rem;
+      font-size: 1.38rem;
       font-weight: 700;
       color: var(--evcse-cloud);
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
     .equipment-app-pill {
       font-size: 0.82rem;
       color: var(--text-muted);
       line-height: 1.45;
       margin-bottom: 16px;
-      min-height: 38px;
+      min-height: 40px;
     }
-    .equipment-price-box {
-      background: rgba(6, 61, 46, 0.4);
-      border: 1px solid rgba(0, 255, 77, 0.2);
-      border-radius: 10px;
-      padding: 12px;
+    .equipment-metrics-box {
+      background: rgba(6, 61, 46, 0.35);
+      border: 1px solid rgba(0, 255, 77, 0.18);
+      border-radius: 12px;
+      padding: 12px 14px;
       margin-bottom: 18px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
     }
-    .equipment-price-label {
-      font-size: 0.7rem;
+    .equip-metric-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .equip-metric-label {
+      font-size: 0.68rem;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.06em;
       color: var(--silver);
-      margin-bottom: 4px;
     }
-    .equipment-price-value {
+    .equip-metric-val {
       font-family: 'Sora', sans-serif;
-      font-size: 1.05rem;
+      font-size: 0.86rem;
       font-weight: 700;
+      color: var(--evcse-cloud);
+      line-height: 1.25;
+    }
+    .equip-metric-val.highlight {
       color: var(--energy-green);
     }
     .equipment-specs-list {
       list-style: none;
       padding: 0;
-      margin: 0 0 22px 0;
+      margin: 0 0 20px 0;
       flex-grow: 1;
     }
     .equipment-specs-list li {
@@ -2856,6 +2899,61 @@
       font-size: 0.72rem;
       color: var(--energy-green);
       margin-top: 1px;
+    }
+    .equip-engineering-banner {
+      background: linear-gradient(135deg, rgba(6, 61, 46, 0.45) 0%, rgba(7, 17, 13, 0.95) 100%);
+      border: 1px solid rgba(0, 255, 77, 0.25);
+      border-radius: 16px;
+      padding: 22px 28px;
+      margin-top: 32px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+    }
+    .equip-engineering-banner .banner-icon {
+      font-size: 1.8rem;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 255, 77, 0.1);
+      border: 1px solid rgba(0, 255, 77, 0.3);
+      border-radius: 12px;
+      flex-shrink: 0;
+      color: var(--energy-green);
+    }
+    .equip-engineering-banner .banner-content {
+      flex-grow: 1;
+    }
+    .equip-engineering-banner .banner-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: var(--evcse-cloud);
+      margin-bottom: 4px;
+    }
+    .equip-engineering-banner .banner-desc {
+      font-size: 0.82rem;
+      color: var(--silver);
+      line-height: 1.45;
+      margin: 0;
+    }
+    @keyframes equipFadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 768px) {
+      .equip-engineering-banner {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 20px;
+      }
+      .equip-engineering-banner .btn-route-action {
+        width: 100%;
+        justify-content: center;
+      }
     }
 
     /* 09. PROCESO DE IMPLEMENTACIÓN */
@@ -4322,7 +4420,7 @@
     <!-- 08. PORTAFOLIO DE CARGADORES (Section 12) -->
     <section class="section-stations" id="cargadores">
       <div class="container">
-        <div class="section-header-block" style="text-align: center; margin: 0 auto 24px;">
+        <div class="section-header-block" style="text-align: center; margin: 0 auto 20px;">
           <span class="section-eyebrow-kicker">Equipamiento Certificado</span>
           <h2 class="section-title">Portafolio de cargadores para cada necesidad</h2>
           <p class="section-subtitle">
@@ -4330,110 +4428,192 @@
           </p>
         </div>
 
+        <!-- Filter bar for charger categories -->
+        <div class="equipment-filter-bar">
+          <button type="button" class="equip-filter-btn active" onclick="filterChargers('all', this)">Todos los Cargadores (4)</button>
+          <button type="button" class="equip-filter-btn" onclick="filterChargers('ac', this)">Carga en Destino (AC)</button>
+          <button type="button" class="equip-filter-btn" onclick="filterChargers('dc-fast', this)">Carga Rápida (DC)</button>
+          <button type="button" class="equip-filter-btn" onclick="filterChargers('dc-ultra', this)">Ultra-Rápida / Hubs (DC)</button>
+        </div>
+
         <div class="equipment-grid">
           <!-- Saturn -->
-          <article class="equipment-card">
+          <article class="equipment-card" data-category="ac">
             <div>
               <div class="equipment-tag-row">
                 <span class="equip-badge-power">AC · 2 × 22 kW</span>
                 <span class="equip-type-tag">Carga en Destino</span>
               </div>
               <h3 class="equipment-name">SATURN</h3>
-              <p class="equipment-app-pill">Residencias, hoteles, clubes y estancias prolongadas.</p>
-              <div class="equipment-price-box">
-                <div class="equipment-price-label">Referencia de planeación</div>
-                <div class="equipment-price-value">Desde USD 1.500 <span style="font-size: 0.75rem; color: var(--silver); font-weight: normal;">FOB China</span></div>
+              <p class="equipment-app-pill">Residencias, hoteles, clubes campestres y estancias prolongadas.</p>
+              
+              <div class="equipment-metrics-box">
+                <div class="equip-metric-item">
+                  <span class="equip-metric-label">Tiempo (20–80%)</span>
+                  <span class="equip-metric-val highlight">4 a 6 horas</span>
+                </div>
+                <div class="equip-metric-item">
+                  <span class="equip-metric-label">Salidas</span>
+                  <span class="equip-metric-val">2 simultáneas</span>
+                </div>
+                <div class="equip-metric-item">
+                  <span class="equip-metric-label">Conectores</span>
+                  <span class="equip-metric-val">Tipo 2 / GB/T</span>
+                </div>
+                <div class="equip-metric-item">
+                  <span class="equip-metric-label">Instalación</span>
+                  <span class="equip-metric-val">Mural / Pedestal</span>
+                </div>
               </div>
+
               <ul class="equipment-specs-list">
-                <li>Doble salida simultánea 22 kW + 22 kW</li>
-                <li>Conectores Tipo 2 / GB/T integrados</li>
-                <li>Balanceo dinámico de carga inteligente</li>
-                <li>Montaje mural o pedestal para intemperie</li>
+                <li>Doble salida balanceada 22 kW + 22 kW (44 kW total)</li>
+                <li>Balanceo dinámico de carga (DLB) para evitar sobrecostos eléctricos</li>
+                <li>Protocolo OCPP 1.6J integrado nativo con la App EVCSE</li>
+                <li>Protección IP54 para intemperie y resistencia climática superior</li>
               </ul>
             </div>
             <button type="button" onclick="openUnifiedModal('Saturn', 'Empresa')" class="btn-route-action">
-              <span>Solicitar cotización</span>
+              <span>Solicitar propuesta técnica →</span>
             </button>
           </article>
 
           <!-- Venus -->
-          <article class="equipment-card">
+          <article class="equipment-card" data-category="dc-fast">
             <div>
               <div class="equipment-tag-row">
                 <span class="equip-badge-power">DC · 30 kW</span>
                 <span class="equip-type-tag">Carga Intermedia</span>
               </div>
               <h3 class="equipment-name">VENUS</h3>
-              <p class="equipment-app-pill">Salud, clínicas, sedes corporativas y recargas intermedias (1-2 h).</p>
-              <div class="equipment-price-box">
-                <div class="equipment-price-label">Referencia de planeación</div>
-                <div class="equipment-price-value">Desde USD 3.050 <span style="font-size: 0.75rem; color: var(--silver); font-weight: normal;">FOB China</span></div>
+              <p class="equipment-app-pill">Salud, clínicas, sedes corporativas y recargas de rotación media (1-2 h).</p>
+              
+              <div class="equipment-metrics-box">
+                <div class="equip-metric-item">
+                  <span class="equip-metric-label">Tiempo (20–80%)</span>
+                  <span class="equip-metric-val highlight">60 a 90 min</span>
+                </div>
+                <div class="equip-metric-item">
+                  <span class="equip-metric-label">Arquitectura</span>
+                  <span class="equip-metric-val">DC Compacto</span>
+                </div>
+                <div class="equip-metric-item">
+                  <span class="equip-metric-label">Conectores</span>
+                  <span class="equip-metric-val">CCS2 / GB/T</span>
+                </div>
+                <div class="equip-metric-item">
+                  <span class="equip-metric-label">Interfaz</span>
+                  <span class="equip-metric-val">Táctil 7" a color</span>
+                </div>
               </div>
+
               <ul class="equipment-specs-list">
-                <li>Potencia compacta DC de 30 kW continuo</li>
-                <li>Pantalla táctil de 7" para monitoreo directo</li>
-                <li>Conector CCS2 y GB/T según proyecto</li>
-                <li>Protocolo OCPP 1.6J nativo para telegestión</li>
+                <li>Potencia continua directa de 30 kW en corriente continua DC</li>
+                <li>Excelente balance entre inversión de subestación y velocidad de rotación</li>
+                <li>Gestión de sesiones y facturación automática en tiempo real</li>
+                <li>Eficiencia eléctrica certificada > 95% y factor de potencia > 0.99</li>
               </ul>
             </div>
             <button type="button" onclick="openUnifiedModal('Venus', 'Empresa')" class="btn-route-action">
-              <span>Solicitar cotización</span>
+              <span>Solicitar propuesta técnica →</span>
             </button>
           </article>
 
           <!-- Jupiter V5 -->
-          <article class="equipment-card">
+          <article class="equipment-card" data-category="dc-fast">
             <div>
               <div class="equipment-tag-row">
                 <span class="equip-badge-power">DC · 60 a 120 kW</span>
                 <span class="equip-type-tag">Carga Rápida Urbana</span>
               </div>
               <h3 class="equipment-name">JUPITER V5</h3>
-              <p class="equipment-app-pill">Centros comerciales, parqueaderos públicos y destinos urbanos.</p>
-              <div class="equipment-price-box">
-                <div class="equipment-price-label">Referencia de planeación</div>
-                <div class="equipment-price-value">USD 6.800 – 8.300 <span style="font-size: 0.75rem; color: var(--silver); font-weight: normal;">FOB China</span></div>
+              <p class="equipment-app-pill">Centros comerciales, retail, parqueaderos públicos y destinos urbanos.</p>
+              
+              <div class="equipment-metrics-box">
+                <div class="equip-metric-item">
+                  <span class="equip-metric-label">Tiempo (20–80%)</span>
+                  <span class="equip-metric-val highlight">25 a 45 min</span>
+                </div>
+                <div class="equip-metric-item">
+                  <span class="equip-metric-label">Configuración</span>
+                  <span class="equip-metric-val">Modular 60/120 kW</span>
+                </div>
+                <div class="equip-metric-item">
+                  <span class="equip-metric-label">Mangueras</span>
+                  <span class="equip-metric-val">Dual CCS2 250A</span>
+                </div>
+                <div class="equip-metric-item">
+                  <span class="equip-metric-label">Eficiencia</span>
+                  <span class="equip-metric-val highlight">> 95% Certificada</span>
+                </div>
               </div>
+
               <ul class="equipment-specs-list">
-                <li>Arquitectura modular escalable de potencia</li>
-                <li>Doble manguera con reparto dinámico inteligente</li>
-                <li>Eficiencia energética certificada > 95%</li>
-                <li>Diseño industrial robusto con protección IP54</li>
+                <li>Arquitectura modular con reparto dinámico inteligente de potencia</li>
+                <li>Permite cargar dos vehículos simultáneamente maximizando el ingreso</li>
+                <li>Gabinete industrial anticorrosión de alta durabilidad (IP54 / IK10)</li>
+                <li>Integración total con reservas, prepago y telemetría de la App EVCSE</li>
               </ul>
             </div>
             <button type="button" onclick="openUnifiedModal('Jupiter V5', 'Empresa')" class="btn-route-action">
-              <span>Solicitar cotización</span>
+              <span>Solicitar propuesta técnica →</span>
             </button>
           </article>
 
           <!-- Titan V5 -->
-          <article class="equipment-card">
+          <article class="equipment-card" data-category="dc-ultra">
             <div>
               <div class="equipment-tag-row">
                 <span class="equip-badge-power">DC · 120 a 240 kW</span>
                 <span class="equip-type-tag">Carga Ultra-Rápida</span>
               </div>
               <h3 class="equipment-name">TITAN V5</h3>
-              <p class="equipment-app-pill">Electrolineras principales y corredores de alta rotación vehicular.</p>
-              <div class="equipment-price-box">
-                <div class="equipment-price-label">Referencia de planeación</div>
-                <div class="equipment-price-value">USD 10.700 – 14.100 <span style="font-size: 0.75rem; color: var(--silver); font-weight: normal;">FOB China</span></div>
+              <p class="equipment-app-pill">Electrolineras principales, corredores viales y Experience Hubs EVCSE.</p>
+              
+              <div class="equipment-metrics-box">
+                <div class="equip-metric-item">
+                  <span class="equip-metric-label">Tiempo (20–80%)</span>
+                  <span class="equip-metric-val highlight">15 a 25 min</span>
+                </div>
+                <div class="equip-metric-item">
+                  <span class="equip-metric-label">Potencia tope</span>
+                  <span class="equip-metric-val">Hasta 240 kW DC</span>
+                </div>
+                <div class="equip-metric-item">
+                  <span class="equip-metric-label">Conectores</span>
+                  <span class="equip-metric-val">CCS2 / NACS Ready</span>
+                </div>
+                <div class="equip-metric-item">
+                  <span class="equip-metric-label">Tecnología</span>
+                  <span class="equip-metric-val">Módulos Hot-Swap</span>
+                </div>
               </div>
+
               <ul class="equipment-specs-list">
-                <li>Potencia ultra-alta de hasta 240 kW DC</li>
-                <li>Compatibilidad con cables refrigerados por líquido</li>
-                <li>Módulos redundantes hot-swap sin interrupción</li>
-                <li>Pantalla publicitaria y telemetría avanzada</li>
+                <li>Máxima velocidad de giro y rotación vehicular para alta afluencia</li>
+                <li>Módulos de potencia redundantes hot-swap para operatividad continua 99.9%</li>
+                <li>Compatible con cables de alta capacidad y refrigeración líquida hasta 500A</li>
+                <li>Pantalla multimedia interactiva para publicidad o información del aliado</li>
               </ul>
             </div>
-            <button type="button" onclick="openUnifiedModal('Titan V5', 'Inversionista')" class="btn-route-action">
-              <span>Solicitar cotización</span>
+            <button type="button" onclick="openUnifiedModal('Titan V5', 'Inversionista')" class="btn-hero-primary" style="width: 100%; justify-content: center;">
+              <span>Configurar estación Titan →</span>
             </button>
           </article>
         </div>
 
-        <div class="disclaimer-badge-text" style="margin-top: 24px;">
-          ⚠️ <strong>Transparencia de costos:</strong> Precios de referencia para planeación. No incluyen transporte, nacionalización, impuestos, instalación, infraestructura eléctrica, obra civil ni puesta en marcha. La compatibilidad, la potencia efectiva y la configuración definitiva deben validarse para cada proyecto.
+        <!-- Banner de Garantía e Ingeniería Integral EVCSE -->
+        <div class="equip-engineering-banner">
+          <div class="banner-icon">⚡</div>
+          <div class="banner-content">
+            <h4 class="banner-title">Ingeniería Eléctrica y Homologación Integral EVCSE</h4>
+            <p class="banner-desc">
+              Cada proyecto incluye estudio de viabilidad eléctrica ante el operador de red (OR), dimensionamiento de subestación, suministro de cargadores certificados RETIE y conexión nativa a la plataforma de cobro, gestión y monitoreo 24/7 EVCSE.
+            </p>
+          </div>
+          <button type="button" onclick="openUnifiedModal('Evaluación de ubicación', 'Empresa')" class="btn-route-action" style="white-space: nowrap;">
+            <span>Evaluar viabilidad técnica</span>
+          </button>
         </div>
       </div>
     </section>
@@ -5654,6 +5834,23 @@
         frame.src = frame.src;
         showToast('Simulador de la App reiniciado.');
       }
+    }
+
+    // Filter Chargers by category
+    function filterChargers(cat, btn) {
+      var cards = document.querySelectorAll('.equipment-grid .equipment-card');
+      var btns = document.querySelectorAll('.equip-filter-btn');
+      btns.forEach(function(b) { b.classList.remove('active'); });
+      if (btn) btn.classList.add('active');
+
+      cards.forEach(function(card) {
+        if (cat === 'all' || card.getAttribute('data-category') === cat) {
+          card.style.display = 'flex';
+          card.style.animation = 'equipFadeIn 0.35s ease forwards';
+        } else {
+          card.style.display = 'none';
+        }
+      });
     }
 
     // 1. Sticky Header Scroll Effect
